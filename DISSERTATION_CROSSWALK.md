@@ -67,3 +67,9 @@ headline results over `R^2`; China's coverage perturbation of about `-70.1` is
 outside the stated box. Restricted to the box, China's regret falls from 3.62
 to 2.95 and total NashConv from 19.63 to 18.96, as stated in dissertation
 Sections 4.1 and 6.4.
+
+Two figure labels were corrected after submission. `fig_rq2_pipeline` reads
+`441-coalition` where the submitted Figure 4.1 reads `512-coalition`, and
+`fig_regime_map` reads `Alpha-Rank sink` where Figure 5.5 reads
+`alpha-Rank sink`. Both are label-only; no plotted value changed, and Section
+3.4 of the dissertation states the 512/441 distinction.

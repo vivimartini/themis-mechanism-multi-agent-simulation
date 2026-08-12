@@ -36,11 +36,13 @@ empirical estimates produced by this repository.
 - Russia, the low-carbon frontier, and hydrocarbon rentiers use a chosen lower
   bound of zero.
 - Indonesia floors a negative net effective rate to zero.
-- Advanced conditional joiners use an aggregated `5.80` base term, emissions
-  weighted across the bloc and adjusted for free allocation. The CSV's
-  `headline_price` column for this row is population-weighted and indicative
-  only; it is not the basis of `alpha_base`. Treat the implemented value as a
-  fixed calibration input rather than a regenerable aggregation.
+- Advanced conditional joiners use an aggregated `5.80` base term, population
+  weighted across the bloc and adjusted for free allocation, matching Section
+  3.3 and Table A.2 of the dissertation. The row's `source_note` in
+  `data/actors_baseline.csv` still describes it as emissions-weighted; that
+  string is stale, and the CSV is left unedited to preserve the recorded
+  SHA-256. Treat the implemented value as a fixed calibration input rather than
+  a regenerable aggregation.
 
 See Appendix A, Tables A.1–A.3, of the dissertation for the full narrative and
 bibliographic references.
