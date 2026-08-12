@@ -1,0 +1,22 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# Matplotlib cache
+.mplcache/
+*.mplconfig
+
+# Local diagnostics and scratch output. Reproducible dissertation data, figures,
+# and reference outputs are intentionally versioned; see REPRODUCIBILITY.md.
+_diag.txt
+figrun.txt
+*.log
+*.tmp

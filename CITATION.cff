@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the accompanying dissertation."
+title: "Multi-Agent Simulation and Strategic Analysis of the Themis Mechanism"
+type: software
+authors:
+  - family-names: Martini
+    given-names: Vivika
+year: 2026
+repository-code: "https://github.com/vivimartini/themis-mechanism-egta"
+keywords:
+  - carbon pricing
+  - mechanism design
+  - empirical game-theoretic analysis
+  - multi-agent simulation
+  - strategic reporting
+abstract: >-
+  Research code accompanying an MPhil dissertation in Machine Learning and
+  Machine Intelligence at the University of Cambridge. The software reproduces
+  the Themis operating-point calculation and evaluates strategic reporting in a
+  calibrated nine-actor empirical game.

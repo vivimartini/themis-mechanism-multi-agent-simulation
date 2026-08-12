@@ -1,0 +1,6 @@
+# Exact versions used to validate the reported results (July 2026, Python 3.13).
+# CMA-ES results are sensitive to the cma package version; keep it pinned.
+numpy==2.5.1
+pandas==3.0.3
+cma==4.4.4
+matplotlib==3.11.0

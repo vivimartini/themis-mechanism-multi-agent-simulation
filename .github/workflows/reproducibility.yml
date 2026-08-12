@@ -1,0 +1,42 @@
+name: Reproducibility smoke checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  MPLCONFIGDIR: /tmp/mpl-themis
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install pinned dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Compile source
+        run: python -m compileall -q engine archetypes rq2 scripts paths.py
+
+      - name: Validate numerical headlines and solvers
+        run: python -m rq2.validate
+
+      - name: Validate Alpha-Rank implementation
+        run: python -m rq2.validate_alpharank
+
+      - name: Check release inventory
+        run: python scripts/check_release.py
+
+      - name: Check dissertation figure legibility
+        run: python scripts/check_figure_fonts.py

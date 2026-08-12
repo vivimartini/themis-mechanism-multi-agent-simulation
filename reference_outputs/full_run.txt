@@ -1,0 +1,854 @@
+
+== engine.themis (RQ1 point) ==
+p* = 26.70
+c* = 0.8686  (actual 0.8686)
+T+ = 0.24   T- = 0.3417
+pool ≈ EUR 72.4B
+joiners: CHINA, UNITED STATES, EUROPEAN UNION, INDIA, ADV. CARBON-PRICED CONDITIONAL JOINERS, LOW-CARBON FRONTIER
+
+== engine.scenario_prior ==
+scenario prior: n=4000, seed=0
+baseline alphas (China α_base=3.27)
+median 26.30  mean 26.76  5–95% 15.35–40.33
+
+Coalition membership across the prior:
+  CHINA                              joins 100.0%   sets the price  23.8%
+  UNITED STATES                      joins  87.2%   sets the price  54.0%
+  EUROPEAN UNION                     joins 100.0%   sets the price   0.0%
+  INDIA                              joins 100.0%   sets the price   8.0%
+  RUSSIA                             joins   0.0%   sets the price   0.0%
+  INDONESIA                          joins  13.8%   sets the price   3.5%
+  ADV. CARBON-PRICED CONDITIONAL JOI joins  99.1%   sets the price   9.8%
+  LOW-CARBON FRONTIER                joins  99.9%   sets the price   0.8%
+  HYDROCARBON RENTIERS               joins   0.0%   sets the price   0.0%
+
+distinct coalitions seen: 8
+modal coalition (6 members, 72.6% of draws): CHINA, UNITED STATES, EUROPEAN UNION, INDIA, ADV. CARBON-PRIC, LOW-CARBON FRONT
+in every draw: CHINA, EUROPEAN UNION, INDIA
+in no draw:    RUSSIA, HYDROCARBON RENT
+
+Variance attribution for the operating price:
+  base terms only (coverage slopes fixed)    var    0.299  =   0.5% of full
+  coverage slopes only (base terms fixed)    var   58.188  =  97.8% of full
+  full prior                                 var   59.475
+
+wrote data/mc_operating_prices.npz
+
+== engine.transfer_parameterisation ==
+==============================================================================
+A. WELL-POSEDNESS: how many operating prices does each design admit?
+==============================================================================
+11025 (coalition, transfer-level) designs enumerated.
+
+           design  no operating price  exactly one  two or more
+     absolute t+-                8824            0         2201
+ratio T+- = t+-/p                   0        11025            0
+
+restricting to SELF-CONSISTENT roots (no willing outsider): 10823 none, 153 one, 49 two or more
+
+Examples of multiplicity (self-consistent roots, EUR/t):
+  t+ = 21.94, c = 0.256, roots [0.08, 4.63]
+      coalition: EUROPEAN UNI, INDIA, INDONESIA, LOW-CARBON F
+  t+ = 22.96, c = 0.256, roots [0.08, 4.67]
+      coalition: EUROPEAN UNI, INDIA, INDONESIA, LOW-CARBON F
+  t+ = 23.98, c = 0.256, roots [0.08, 4.71]
+      coalition: EUROPEAN UNI, INDIA, INDONESIA, LOW-CARBON F
+  t+ = 25.00, c = 0.256, roots [0.15, 4.75]
+      coalition: EUROPEAN UNI, INDIA, INDONESIA, LOW-CARBON F
+  t+ = 15.81, c = 0.348, roots [2.14, 7.97]
+      coalition: EUROPEAN UNI, INDIA, INDONESIA, ADV. CARBON-, LOW-CARBON F
+
+==============================================================================
+B. DOES THE SELECTION RULE MATTER?
+==============================================================================
+  lowest root   : p =  26.68, c = 0.869, t+ =  6.62, c*p = 23.18
+                  coalition (6): CHINA, UNITED STATE, EUROPEAN UNI, INDIA, ADV. CARBON-, LOW-CARBON F
+  highest root  : p =  26.68, c = 0.869, t+ =  6.62, c*p = 23.18
+                  coalition (6): CHINA, UNITED STATE, EUROPEAN UNI, INDIA, ADV. CARBON-, LOW-CARBON F
+
+
+==============================================================================
+C. THE RATIO DESIGN, FOR COMPARISON
+==============================================================================
+one pass, no fixed point required: p = 26.70, c = 0.8686, T+ = 0.24, T- = 0.3417
+equivalent absolute rate at this price: t+ = T+ * p = 6.41 EUR/t
+
+saved data/transfer_parameterisation.npz
+
+== engine.aggregation_check ==
+Baseline, advanced joiners aggregated:
+    p = 26.70, c = 0.8686, T+ = 0.24, T- = 0.3417
+    coalition (6): CHINA, UNITED STATES, EUROPEAN UNION, INDIA, ADV. CARBON-PRICED CON, LOW-CARBON FRONTIER
+
+UK split out on supplied inputs (pop 68.3 M, e 5.4 tCO2e/cap, alpha_base 15.0):
+    p = 26.70, c = 0.8686, T+ = 0.24, T- = 0.3406
+    coalition (7): CHINA, UNITED STATES, EUROPEAN UNION, INDIA, LOW-CARBON FRONTIER, ADV. CARBON- residual, UNITED KINGDOM
+    UK joins: True, net transfer +10.92 EUR/cap (beneficiary)
+    bloc residual joins: True, net transfer -40.41 EUR/cap
+    price move vs baseline: +0.0000 EUR/t
+    T- move vs baseline:    -0.00104
+
+Sweeping the UK base term, the least certain input:
+ alpha_base    price       dp        T-       dT-  UK in  UK EUR/cap
+        5.0    26.70  +0.0000   0.34065  -0.00104   True      +10.92
+       10.0    26.70  +0.0000   0.34065  -0.00104   True      +10.92
+       15.0    26.70  +0.0000   0.34065  -0.00104   True      +10.92
+       20.0    26.70  +0.0000   0.34065  -0.00104   True      +10.92
+       25.0    26.70  +0.0000   0.34065  -0.00104   True      +10.92
+       30.0    26.70  +0.0000   0.34065  -0.00104   True      +10.92
+       40.0    26.04  -0.6653   0.31226  -0.02943   True       +9.76
+
+Across the sweep: largest price move 0.6653 EUR/t, largest T- move 0.02943;
+the UK joins in every case, as a beneficiary receiving +9.76 to +10.92 EUR/cap.
+Aggregation therefore misstates the UK's own transfer direction without
+moving the operating point the dissertation reports.
+
+== archetypes.reproduce_archetypes ==
+========================================================================
+STAGE 0  published worked example (universal membership)
+========================================================================
+equal per-capita payment   EUR 66.00   published EUR 66
+  South Korea  at 12.8 tCO2e/cap: net  -62.00   published -62
+  India        at  3.0 tCO2e/cap: net  +36.00   published +36
+
+========================================================================
+STAGE A  transfer accounting
+========================================================================
+contributor excess mass        8378.4
+beneficiary deficit mass      16019.1
+balanced t+/t-                 1.9120   (1.91)
+pair anchored at t-=6.10:  t+ = 11.66, t- = 6.10
+
+per-capita transfers, EUR/person/year (computed vs published)
+  EU27 bloc                 -9.34       -9
+  Other high-income        -50.18      -50
+  China                    -51.35      -51
+  India & developing       +16.44      +17
+  Less wealthy             +27.41      +28
+
+contributor pool   EUR  97.8B   published EUR 98B
+payout             EUR  97.6B   imbalance 0.22%
+emissions coverage  75.2%   published 75.2%
+population coverage 90.0%   published 90%
+
+========================================================================
+STAGE B  elicitation reproduction
+========================================================================
+selected coalition   A1, A2, A4, A6, A7
+operating price      EUR 19.75   published EUR 20.97   gap EUR 1.22
+coverage             75.2%   published 75.2%
+transfer rates       t+ 11.87  t- 6.21   published 11.67 / 6.09
+
+sanity at published (c,t): China p=20.18, India p=19.37  (want ~20.97)
+
+========================================================================
+STAGE B SENSITIVITY  digitisation check
+========================================================================
+baseline price EUR 19.75
+
+  India (A6) slope       +10%:  price EUR 18.82  (-0.93)   coalition+coverage unchanged
+  India (A6) slope       -10%:  price EUR 20.82  (+1.06)   coalition+coverage unchanged
+  China (A4) intercept   +5%:  price EUR 20.04  (+0.29)   coalition+coverage unchanged
+  China (A4) intercept   -5%:  price EUR 19.27  (-0.48)   coalition+coverage unchanged
+
+largest price move from a plausible digitisation error: EUR 1.06; the Stage B gap is EUR 1.22.
+
+== rq2.report_semantics ==
+=== report semantics: which reading of p_i(c) supports the DSIC claim? ===
+operating point: p = 26.70, c = 0.8686, T+ = 0.24, T- = 0.3417
+
+                               NashConv | peak  NashConv | cap  NashConv | transfer
+fixed coverage (DSIC control)            0.000         139.223              146.629
+endogenous coverage                     19.628         103.240              357.557 
+
+At FIXED coverage the peaked reading gives NashConv = 0.0000 and the cap reading gives 139.2230.
+Per-actor regret at fixed coverage (who gains from which reading):
+                                 actor  peak    cap  transfer
+                                 CHINA   0.0 26.703    26.981
+                         UNITED STATES   0.0 26.703    68.831
+                        EUROPEAN UNION   0.0 24.295     3.461
+                                 INDIA   0.0 25.333     0.000
+                                RUSSIA   0.0  0.000     0.000
+                             INDONESIA   0.0  0.000    17.427
+ADV. CARBON-PRICED CONDITIONAL JOINERS   0.0 24.296    29.929
+                   LOW-CARBON FRONTIER   0.0 11.893     0.000
+                  HYDROCARBON RENTIERS   0.0  0.000     0.000 
+
+=== direction of price preference under T+- = t+-/p ===
+                                 actor        role status  e (t/cap)  du/dp (EUR/cap per EUR/t)  transfer at p* (EUR/cap)       wants
+                                 CHINA contributor     in      10.81                     -1.010                    -26.98     lower p
+                         UNITED STATES contributor     in      17.34                     -2.578                    -68.83     lower p
+                        EUROPEAN UNION contributor     in       7.14                     -0.130                     -3.46     lower p
+                                 INDIA beneficiary     in       3.04                      1.216                     32.48    higher p
+                                RUSSIA contributor    out      18.02                      0.000                      0.00 indifferent
+                             INDONESIA beneficiary    out       4.69                      0.000                      0.00 indifferent
+ADV. CARBON-PRICED CONDITIONAL JOINERS contributor     in      11.27                     -1.121                    -29.93     lower p
+                   LOW-CARBON FRONTIER beneficiary     in       1.45                      1.760                     46.99    higher p
+                  HYDROCARBON RENTIERS contributor    out      23.46                      0.000                      0.00 indifferent
+
+Members wanting a HIGHER price: 2 beneficiaries; wanting a LOWER price: 4 contributors.
+Beneficiary transfer utility is linear and strictly increasing in p, so it
+has no interior maximum: their acceptable set is bounded BELOW, not above.
+A single 'highest acceptable price' elicitation cannot represent both sides.
+
+saved data/report_semantics.npz
+
+== rq2.fixed_coverage ==
+truthful fixed-coverage point: p = 26.70, members = ['CHINA', 'UNITED STATES', 'EUROPEAN UNION', 'INDIA', 'ADV. CARBON-PRICED CONDITIONAL JOINERS', 'LOW-CARBON FRONTIER']
+(sanity: should equal the operating price 26.70 with the six joiners)
+
+--- utility = peaked
+                                 actor  truthful report  best report  u(truth)  u(best)  regret
+                                 CHINA           32.157       32.157    -5.454   -5.454     0.0
+                         UNITED STATES           26.703       26.703    -0.000   -0.000     0.0
+                        EUROPEAN UNION           92.275       92.275   -65.572  -65.572     0.0
+                                 INDIA           26.924       26.924    -0.221   -0.221     0.0
+                                RUSSIA            2.408        2.408   -24.296  -24.296     0.0
+                             INDONESIA           14.811       14.811   -11.893  -11.893     0.0
+ADV. CARBON-PRICED CONDITIONAL JOINERS           35.687       35.687    -8.984   -8.984     0.0
+                   LOW-CARBON FRONTIER           28.305       28.305    -1.602   -1.602     0.0
+                  HYDROCARBON RENTIERS            1.370        1.370   -25.333  -25.333     0.0
+NashConv = 0.0000
+
+--- utility = transfer
+                                 actor  truthful report  best report  u(truth)  u(best)  regret
+                                 CHINA           32.157        0.000   -26.981   -0.000  26.981
+                         UNITED STATES           26.703        0.000   -68.831   -0.000  68.831
+                        EUROPEAN UNION           92.275        0.000    -3.461    0.000   3.461
+                                 INDIA           26.924       26.924    32.482   32.482   0.000
+                                RUSSIA            2.408        2.408     0.000    0.000   0.000
+                             INDONESIA           14.811       34.811     0.000   17.427  17.427
+ADV. CARBON-PRICED CONDITIONAL JOINERS           35.687        0.000   -29.929    0.000  29.929
+                   LOW-CARBON FRONTIER           28.305       28.305    46.990   46.990   0.000
+                  HYDROCARBON RENTIERS            1.370        1.370     0.000    0.000   0.000
+NashConv = 146.6289
+
+
+== rq2.endogenous_coverage ==
+truthful endogenous point: p = 26.70, c_model = 0.8686, T+ = 0.24, T- = 0.3417
+members: ['CHINA', 'UNITED STATES', 'EUROPEAN UNION', 'INDIA', 'ADV. CARBON-PRICED CONDITIONAL JOINERS', 'LOW-CARBON FRONTIER']
+(sanity: 26.70 / 0.8687 / 0.24 / 0.3417 with the six joiners)
+
+--- utility = peaked (endogenous coverage)
+                                 actor  u(truth)  u(best)  regret  best (db,dc) realised outcome
+                                 CHINA    -5.454   -1.829   3.624 (+31.0,-70.1) p=14.93, c=0.468
+                         UNITED STATES    -0.000   -0.000   0.000   (+0.0,+0.0) p=26.70, c=0.869
+                        EUROPEAN UNION   -65.572  -60.713   4.858 (-39.6,-46.3) p=24.39, c=0.784
+                                 INDIA    -0.221   -0.181   0.039  (+20.0,+0.0) p=26.73, c=0.869
+                                RUSSIA   -24.296  -24.296   0.000   (+0.0,+0.0) p=26.70, c=0.869
+                             INDONESIA   -11.893   -2.688   9.205 (-16.6,+21.4) p=25.67, c=0.904
+ADV. CARBON-PRICED CONDITIONAL JOINERS    -8.984   -8.334   0.650  (-40.0,+0.0) p=24.11, c=0.776
+                   LOW-CARBON FRONTIER    -1.602   -1.602   0.000   (+0.0,+0.0) p=26.70, c=0.869
+                  HYDROCARBON RENTIERS   -25.333  -24.082   1.251  (+23.9,+0.2) p=25.92, c=0.897
+NashConv = 19.627
+
+--- utility = transfer (endogenous coverage)
+                                 actor  u(truth)  u(best)  regret  best (db,dc) realised outcome
+                                 CHINA   -26.981    0.000  26.981  (-40.0,+0.0) p=15.39, c=0.468
+                         UNITED STATES   -68.831    0.000  68.831  (-40.0,+0.0) p=25.66, c=0.714
+                        EUROPEAN UNION    -3.461    0.000   3.461 (-39.6,-46.3) p=24.39, c=0.784
+                                 INDIA    32.482  125.413  92.931 (-12.9,-20.5) p=24.74, c=0.869
+                                RUSSIA     0.000    0.000   0.000   (+0.0,+0.0) p=26.70, c=0.869
+                             INDONESIA     0.000   65.476  65.476   (+9.7,-7.6) p=25.72, c=0.904
+ADV. CARBON-PRICED CONDITIONAL JOINERS   -29.929    0.000  29.929  (-40.0,+0.0) p=24.11, c=0.776
+                   LOW-CARBON FRONTIER    46.990  116.937  69.948 (-16.7,-24.1) p=25.72, c=0.869
+                  HYDROCARBON RENTIERS     0.000    0.000   0.000   (+0.0,+0.0) p=26.70, c=0.869
+NashConv = 357.557
+
+
+== rq2.sqloss_check ==
+actor                                       peaked      sqloss
+CHINA                                       3.6243     26.3949
+UNITED STATES                               0.0000      0.0000
+EUROPEAN UNION                              4.8584    613.5488
+INDIA                                       0.0394      0.0158
+RUSSIA                                      0.0000      0.0000
+INDONESIA                                   9.2052    134.2147
+ADV. CARBON-PRICED CONDITIONAL JOINERS      0.6495     11.2482
+LOW-CARBON FRONTIER                         0.0000      0.0000
+HYDROCARBON RENTIERS                        1.2511     61.8222
+
+exploitable set identical : True
+ordering identical        : False
+peaked ordering : ['INDONESIA', 'EUROPEAN UNION', 'CHINA', 'HYDROCARBON RENTIERS', 'ADV. CARBON-PRICED CONDITIONAL JOINERS', 'INDIA']
+sqloss ordering : ['EUROPEAN UNION', 'INDONESIA', 'HYDROCARBON RENTIERS', 'CHINA', 'ADV. CARBON-PRICED CONDITIONAL JOINERS', 'INDIA']
+pivot (US) sqloss regret  : 0.000000
+
+== rq2.case_study ==
+Truthful operating point
+  p =  26.70  c = 0.8686  T+ = 0.24  T- = 0.3417  c*p = 23.20
+    coalition (6): CHINA, UNITED STATES, EUROPEAN UNION, INDIA, ADV. CARBON-PRICED CONDITIONAL JOINERS, LOW-CARBON FRONTIER
+
+Each case below is one actor deviating ALONE; everyone else reports
+truthfully. Simultaneous deviation is treated in rq2.information_and_risk.
+
+==============================================================================
+CASE: INDONESIA  (utility = peaked, regret = 9.205 EUR/t)
+==============================================================================
+report:  truthful (alpha_base, alpha_cov) = (0.00, 14.00)
+         strategic                        = (-16.64, 35.39)   [delta = (-16.6, +21.4)]
+
+  TRUTHFUL   p =  26.70  c = 0.8686  T+ = 0.24  T- = 0.3417  c*p = 23.20
+    coalition (6): CHINA, UNITED STATES, EUROPEAN UNION, INDIA, ADV. CARBON-PRICED CONDITIONAL JOINERS, LOW-CARBON FRONTIER
+  STRATEGIC  p =  25.67  c = 0.9036  T+ = 1.00  T- = 1.3327  c*p = 23.20
+    coalition (7): CHINA, UNITED STATES, EUROPEAN UNION, INDIA, INDONESIA, ADV. CARBON-PRICED CONDITIONAL JOINERS, LOW-CARBON FRONTIER
+
+                 actor   in/out  w truth  w strat  u_pk truth  u_pk strat  d u_pk  EUR/cap truth  EUR/cap strat  d EUR/cap               
+                 CHINA in ->in     32.16    28.58       -5.45       -2.91    2.55          -27.0         -108.1      -81.1               
+         UNITED STATES in ->in     26.70    25.72       -0.00       -0.05   -0.05          -68.8         -275.7     -206.9               
+        EUROPEAN UNION in ->in     92.28    95.05      -65.57      -69.38   -3.81           -3.5          -13.9      -10.4               
+                 INDIA in ->in     26.92    53.66       -0.22      -27.99  -27.77           32.5          121.8       89.3               
+                RUSSIA out->out     2.41     0.00      -24.30      -25.67   -1.38            0.0            0.0        0.0               
+             INDONESIA out->in     14.81    22.98      -11.89       -2.69    9.21            0.0           65.3       65.3   <-- deviator
+ADV. CARBON-PRICED CON in ->in     35.69    35.28       -8.98       -9.60   -0.62          -29.9         -119.9      -90.0               
+   LOW-CARBON FRONTIER in ->in     28.31    93.01       -1.60      -67.34  -65.74           47.0          176.2      129.2               
+  HYDROCARBON RENTIERS out->out     1.37     0.00      -25.33      -25.67   -0.34            0.0            0.0        0.0               
+
+  deviator gains +9.21 peaked / +65.3 EUR per capita.
+  others: 7/8 worse off on peaked utility; sum of others' peaked change -97.16; sum of others' transfers -169.8 EUR/cap.
+  mechanism objective c*p: 23.20 -> 23.20 (+0.0%)
+  worst hit: LOW-CARBON FRONTIER
+
+==============================================================================
+CASE: EUROPEAN UNION  (utility = peaked, regret = 4.858 EUR/t)
+==============================================================================
+report:  truthful (alpha_base, alpha_cov) = (18.50, 85.00)
+         strategic                        = (-21.14, 38.69)   [delta = (-39.6, -46.3)]
+
+  TRUTHFUL   p =  26.70  c = 0.8686  T+ = 0.24  T- = 0.3417  c*p = 23.20
+    coalition (6): CHINA, UNITED STATES, EUROPEAN UNION, INDIA, ADV. CARBON-PRICED CONDITIONAL JOINERS, LOW-CARBON FRONTIER
+  STRATEGIC  p =  24.39  c = 0.7842  T+ = 0.22  T- = 0.3065  c*p = 19.13
+    coalition (5): CHINA, UNITED STATES, INDIA, ADV. CARBON-PRICED CONDITIONAL JOINERS, LOW-CARBON FRONTIER
+
+                 actor   in/out  w truth  w strat  u_pk truth  u_pk strat  d u_pk  EUR/cap truth  EUR/cap strat  d EUR/cap               
+                 CHINA in ->in     32.16    29.33       -5.45       -4.94    0.52          -27.0          -22.6        4.4               
+         UNITED STATES in ->in     26.70    24.39       -0.00       -0.00    0.00          -68.8          -57.6       11.2               
+        EUROPEAN UNION in ->out    92.28    85.10      -65.57      -60.71    4.86           -3.5            0.0        3.5   <-- deviator
+                 INDIA in ->in     26.92    24.64       -0.22       -0.25   -0.03           32.5           26.6       -5.9               
+                RUSSIA out->out     2.41     2.12      -24.30      -22.27    2.03            0.0            0.0        0.0               
+             INDONESIA out->out    14.81    13.36      -11.89      -11.04    0.86            0.0            0.0        0.0               
+ADV. CARBON-PRICED CON in ->in     35.69    32.78       -8.98       -8.38    0.60          -29.9          -25.1        4.9               
+   LOW-CARBON FRONTIER in ->in     28.31    25.42       -1.60       -1.03    0.57           47.0           38.5       -8.5               
+  HYDROCARBON RENTIERS out->out     1.37     1.21      -25.33      -23.18    2.15            0.0            0.0        0.0               
+
+  deviator gains +4.86 peaked / +3.5 EUR per capita.
+  others: 1/8 worse off on peaked utility; sum of others' peaked change +6.69; sum of others' transfers +6.1 EUR/cap.
+  mechanism objective c*p: 23.20 -> 19.13 (-17.5%)
+  worst hit: INDIA
+
+==============================================================================
+CASE: CHINA  (utility = peaked, regret = 3.624 EUR/t)
+==============================================================================
+report:  truthful (alpha_base, alpha_cov) = (3.27, 35.00)
+         strategic                        = (34.29, -35.11)   [delta = (+31.0, -70.1)]
+
+  TRUTHFUL   p =  26.70  c = 0.8686  T+ = 0.24  T- = 0.3417  c*p = 23.20
+    coalition (6): CHINA, UNITED STATES, EUROPEAN UNION, INDIA, ADV. CARBON-PRICED CONDITIONAL JOINERS, LOW-CARBON FRONTIER
+  STRATEGIC  p =  14.93  c = 0.4683  T+ = 0.46  T- = 0.3107  c*p = 6.99
+    coalition (5): UNITED STATES, EUROPEAN UNION, INDIA, ADV. CARBON-PRICED CONDITIONAL JOINERS, LOW-CARBON FRONTIER
+
+                 actor   in/out  w truth  w strat  u_pk truth  u_pk strat  d u_pk  EUR/cap truth  EUR/cap strat  d EUR/cap               
+                 CHINA in ->out    32.16    16.76       -5.45       -1.83    3.62          -27.0            0.0       27.0   <-- deviator
+         UNITED STATES in ->in     26.70    14.93       -0.00       -0.00    0.00          -68.8          -73.8       -4.9               
+        EUROPEAN UNION in ->in     92.28    58.20      -65.57      -43.27   22.30           -3.5           -3.7       -0.2               
+                 INDIA in ->in     26.92    19.70       -0.22       -4.77   -4.55           32.5           16.5      -16.0               
+                RUSSIA out->out     2.41     0.00      -24.30      -14.93    9.37            0.0            0.0        0.0               
+             INDONESIA out->out    14.81     8.97      -11.89       -5.96    5.93            0.0            0.0        0.0               
+ADV. CARBON-PRICED CON in ->in     35.69    21.20       -8.98       -6.28    2.71          -29.9          -32.1       -2.1               
+   LOW-CARBON FRONTIER in ->in     28.31    23.49       -1.60       -8.56   -6.96           47.0           23.9      -23.1               
+  HYDROCARBON RENTIERS out->out     1.37     0.00      -25.33      -14.93   10.40            0.0            0.0        0.0               
+
+  deviator gains +3.62 peaked / +27.0 EUR per capita.
+  others: 2/8 worse off on peaked utility; sum of others' peaked change +39.20; sum of others' transfers -46.4 EUR/cap.
+  mechanism objective c*p: 23.20 -> 6.99 (-69.9%)
+  worst hit: LOW-CARBON FRONTIER
+
+==============================================================================
+SUMMARY
+==============================================================================
+          case  regret (EUR/t)     p     c  c*p vs truth %
+     INDONESIA            9.21 25.67 0.904             0.0
+EUROPEAN UNION            4.86 24.39 0.784           -17.5
+         CHINA            3.62 14.93 0.468           -69.9
+
+== rq2.obstruction_voteselling ==
+truthful objective c*p = 23.196  (c=0.8686, p=26.70)
+
+=== step 3: obstruction (minimise c*p) ===
+                                 actor  damage to c*p  damage %    worst outcome  self dU peaked  self dU transfer
+                                 CHINA         15.987      68.9 p=15.39, c=0.468            2.95             26.98
+                         UNITED STATES          4.879      21.0 p=25.66, c=0.714           -3.73             68.83
+                        EUROPEAN UNION          4.068      17.5 p=24.39, c=0.784            4.86              3.46
+                                 INDIA          5.221      22.5 p=23.87, c=0.753           -0.56            -32.48
+                                RUSSIA          0.000       0.0 p=26.70, c=0.869            0.00              0.00
+                             INDONESIA          0.000       0.0 p=26.70, c=0.869            0.00              0.00
+ADV. CARBON-PRICED CONDITIONAL JOINERS          4.494      19.4 p=24.11, c=0.776            0.65             29.93
+                   LOW-CARBON FRONTIER          0.859       3.7 p=26.34, c=0.848           -0.77            -46.99
+                  HYDROCARBON RENTIERS          0.000       0.0 p=26.70, c=0.869            0.00              0.00 
+
+=== step 4: pairwise vote-selling (transfer utility, TU condition) ===
+                               buyer A                               seller B  joint surplus    dU_A    dU_B                       type
+                   LOW-CARBON FRONTIER                                  CHINA         949.59 1521.37 -571.78 purchase, min bribe 571.78
+                   LOW-CARBON FRONTIER                                  INDIA         227.37  134.44   92.93  aligned (no bribe needed)
+                   LOW-CARBON FRONTIER                              INDONESIA         195.03  129.56   65.48  aligned (no bribe needed)
+                                 INDIA                              INDONESIA         155.03   89.56   65.48  aligned (no bribe needed)
+                             INDONESIA                                  INDIA         123.36   54.41   68.94  aligned (no bribe needed)
+                                 INDIA                    LOW-CARBON FRONTIER         118.30   48.35   69.95  aligned (no bribe needed)
+                         UNITED STATES                                  CHINA          94.81   68.11   26.70  aligned (no bribe needed)
+                  HYDROCARBON RENTIERS                                  INDIA          92.93    0.00   92.93  aligned (no bribe needed)
+                                RUSSIA                                  INDIA          92.93    0.00   92.93  aligned (no bribe needed)
+                        EUROPEAN UNION                                  INDIA          83.03   -9.90   92.93  aligned (no bribe needed)
+                   LOW-CARBON FRONTIER                          UNITED STATES          74.04    5.21   68.83  aligned (no bribe needed)
+                                 INDIA                          UNITED STATES          72.43    3.60   68.83  aligned (no bribe needed)
+                                RUSSIA                    LOW-CARBON FRONTIER          69.95    0.00   69.95  aligned (no bribe needed)
+                  HYDROCARBON RENTIERS                    LOW-CARBON FRONTIER          69.95    0.00   69.95  aligned (no bribe needed)
+                             INDONESIA                    LOW-CARBON FRONTIER          69.95    0.00   69.95  aligned (no bribe needed)
+                             INDONESIA                          UNITED STATES          68.83    0.00   68.83  aligned (no bribe needed)
+                  HYDROCARBON RENTIERS                          UNITED STATES          68.83    0.00   68.83  aligned (no bribe needed)
+                                RUSSIA                          UNITED STATES          68.83    0.00   68.83  aligned (no bribe needed)
+                        EUROPEAN UNION                          UNITED STATES          66.61   -2.22   68.83  aligned (no bribe needed)
+                  HYDROCARBON RENTIERS                              INDONESIA          65.48    0.00   65.48  aligned (no bribe needed)
+                                RUSSIA                              INDONESIA          65.48    0.00   65.48  aligned (no bribe needed)
+                        EUROPEAN UNION                    LOW-CARBON FRONTIER          64.80   -5.15   69.95  aligned (no bribe needed)
+ADV. CARBON-PRICED CONDITIONAL JOINERS                                  CHINA          56.10   29.50   26.60  aligned (no bribe needed)
+                        EUROPEAN UNION                              INDONESIA          55.05  -10.43   65.48  aligned (no bribe needed)
+                                 CHINA                          UNITED STATES          51.52  -17.32   68.83  aligned (no bribe needed)
+ADV. CARBON-PRICED CONDITIONAL JOINERS                          UNITED STATES          49.62  -19.21   68.83  aligned (no bribe needed)
+                         UNITED STATES ADV. CARBON-PRICED CONDITIONAL JOINERS          36.63    6.70   29.93  aligned (no bribe needed)
+                                 CHINA ADV. CARBON-PRICED CONDITIONAL JOINERS          32.55    2.63   29.93  aligned (no bribe needed)
+                        EUROPEAN UNION ADV. CARBON-PRICED CONDITIONAL JOINERS          30.27    0.34   29.93  aligned (no bribe needed)
+                                RUSSIA ADV. CARBON-PRICED CONDITIONAL JOINERS          29.93    0.00   29.93  aligned (no bribe needed)
+                             INDONESIA ADV. CARBON-PRICED CONDITIONAL JOINERS          29.93    0.00   29.93  aligned (no bribe needed)
+                  HYDROCARBON RENTIERS ADV. CARBON-PRICED CONDITIONAL JOINERS          29.93    0.00   29.93  aligned (no bribe needed)
+                                 CHINA                    LOW-CARBON FRONTIER          29.78  -40.16   69.95  aligned (no bribe needed)
+                        EUROPEAN UNION                                  CHINA          28.11    1.13   26.98  aligned (no bribe needed)
+                  HYDROCARBON RENTIERS                                  CHINA          26.98    0.00   26.98  aligned (no bribe needed)
+                             INDONESIA                                  CHINA          26.98    0.00   26.98  aligned (no bribe needed)
+                                RUSSIA                                  CHINA          26.98    0.00   26.98  aligned (no bribe needed)
+                   LOW-CARBON FRONTIER ADV. CARBON-PRICED CONDITIONAL JOINERS          26.84   90.37  -63.53  purchase, min bribe 63.53
+ADV. CARBON-PRICED CONDITIONAL JOINERS                    LOW-CARBON FRONTIER          25.40  -44.55   69.95  aligned (no bribe needed)
+                                 INDIA ADV. CARBON-PRICED CONDITIONAL JOINERS          22.97   -6.96   29.93  aligned (no bribe needed)
+                                 CHINA                                  INDIA          15.74  -77.19   92.93  aligned (no bribe needed)
+                                 CHINA                              INDONESIA          15.03   -3.24   18.27  aligned (no bribe needed)
+ADV. CARBON-PRICED CONDITIONAL JOINERS                              INDONESIA          14.68   -3.60   18.27  aligned (no bribe needed)
+                         UNITED STATES                         EUROPEAN UNION          14.66   11.20    3.46  aligned (no bribe needed)
+                                 INDIA                                  CHINA          11.01  -15.97   26.98  aligned (no bribe needed)
+                         UNITED STATES                              INDONESIA          10.01   -8.27   18.27  aligned (no bribe needed)
+ADV. CARBON-PRICED CONDITIONAL JOINERS                         EUROPEAN UNION           8.33    4.87    3.46  aligned (no bribe needed)
+                                 CHINA                         EUROPEAN UNION           7.85    4.39    3.46  aligned (no bribe needed)
+ADV. CARBON-PRICED CONDITIONAL JOINERS                                  INDIA           7.30  -85.63   92.93  aligned (no bribe needed)
+                             INDONESIA                         EUROPEAN UNION           3.46    0.00    3.46  aligned (no bribe needed)
+                                RUSSIA                         EUROPEAN UNION           3.46    0.00    3.46  aligned (no bribe needed)
+                  HYDROCARBON RENTIERS                         EUROPEAN UNION           3.46    0.00    3.46  aligned (no bribe needed)
+                         UNITED STATES                                  INDIA           1.48    2.80   -1.32   purchase, min bribe 1.32
+
+pairs with positive joint surplus: 53 / 72; true purchases (seller must be bribed): 3
+
+== rq2.climate_benefit ==
+=== A. break-even climate valuation for obstruction ===
+truthful objective c*p = 23.196
+
+                                 actor  damage to c*p (%)  transfer gain (EUR/cap) break-even B* (EUR/cap per unit c*p)
+                                 CHINA               68.9                    26.98                                1.688
+                         UNITED STATES               21.0                    68.83                               14.109
+                        EUROPEAN UNION               17.5                     3.46                                0.851
+                                 INDIA               22.5                   -32.48          never (costs transfers too)
+                                RUSSIA               -0.0                     0.00          never (costs transfers too)
+                             INDONESIA               -0.0                     0.00          never (costs transfers too)
+ADV. CARBON-PRICED CONDITIONAL JOINERS               19.4                    29.93                                6.661
+                   LOW-CARBON FRONTIER                3.7                   -46.99          never (costs transfers too)
+                  HYDROCARBON RENTIERS               -0.0                     0.00          never (costs transfers too)
+
+=== B. re-optimised attacks under a climate term (coarse grid) ===
+A deviator facing a real climate cost does not stop attacking; it
+switches to attacks that spare the objective. Regret is in EUR/cap.
+
+   B  actors with regret  of which damaging  total regret  max regret worst actor
+0.00                   7                  6        354.01       92.93       INDIA
+0.25                   7                  6        346.02       92.51       INDIA
+0.50                   7                  6        338.02       92.08       INDIA
+1.00                   6                  5        322.99       91.23       INDIA
+2.00                   6                  5        302.63       89.53       INDIA
+4.00                   5                  4        276.05       86.12       INDIA
+8.00                   4                  3        234.55       79.32       INDIA
+
+=== C. vote-selling: per-capita vs population-weighted ===
+The published joint surplus sums EUR/capita across countries of very
+different size. Totals below are EUR bn and are the meaningful figure.
+
+         buyer         seller  surplus EUR/cap  surplus EUR bn  d(c*p)  EUR/cap at B=1  EUR bn at B=1
+LOW-CARBON FRO          CHINA            949.6            12.7   36.65          1022.9           84.2
+LOW-CARBON FRO          INDIA            227.4           207.1   -1.70           224.0          203.7
+ UNITED STATES          INDIA              1.5            -1.0    0.02             1.5           -0.9
+LOW-CARBON FRO EUROPEAN UNION              0.0             0.0    0.00             0.0            0.0
+
+saved data/climate_benefit.npz
+
+== rq2.information_and_risk ==
+==============================================================================
+A1. HOW MUCH MUST A DEVIATOR KNOW?
+==============================================================================
+                                 actor  E[regret] full info  E[regret] prior only  % of full info prior-optimal report
+                                 CHINA                 2.41                  0.00             0.0             truthful
+                         UNITED STATES                 2.22                  0.35            16.0        x=[-16.  20.]
+                        EUROPEAN UNION                 4.71                  4.43            94.0        x=[-52. -42.]
+                                 INDIA                 0.23                  0.00             0.0             truthful
+                                RUSSIA                 3.11                  0.86            28.0        x=[-18.  34.]
+                             INDONESIA                 2.71                  0.16             6.0        x=[-29.  42.]
+ADV. CARBON-PRICED CONDITIONAL JOINERS                 1.00                  0.16            16.0        x=[-40.   0.]
+                   LOW-CARBON FRONTIER                 0.41                  0.09            21.0          x=[ 5. -3.]
+                  HYDROCARBON RENTIERS                 0.92                  0.15            17.0          x=[-5. 20.]
+
+NashConv with full information: 17.72
+NashConv with prior information only: 6.20 (35% of full)
+
+==============================================================================
+A2. HOW PRECISELY MUST IT KNOW IT?
+==============================================================================
+ noise sd on others' alphas  realised total gain  max realised gain best-placed actor
+                        0.0                20.30               9.16         INDONESIA
+                        2.0                 0.42               4.81    EUROPEAN UNION
+                        5.0                -2.71               4.81    EUROPEAN UNION
+                       10.0                 0.74               4.21    EUROPEAN UNION
+                       20.0                -1.09               3.61    EUROPEAN UNION
+                       40.0                -4.93               1.20    EUROPEAN UNION
+
+==============================================================================
+B. DOES THE ATTACK EXPOSE THE DEVIATOR TO RISK?
+==============================================================================
+                                 actor  mean dU  5th pct  worst P(backfires)
+                                 CHINA    -1.69    -9.96 -10.89          57%
+                         UNITED STATES     0.00     0.00   0.00           0%
+                        EUROPEAN UNION     1.17   -21.61 -28.00          20%
+                                 INDIA     0.00     0.00   0.00           0%
+                                RUSSIA     0.34    -1.32  -5.60          38%
+                             INDONESIA     0.02    -2.57  -6.82          27%
+ADV. CARBON-PRICED CONDITIONAL JOINERS     0.16    -5.28  -8.24          25%
+                   LOW-CARBON FRONTIER     0.00     0.00   0.00           0%
+                  HYDROCARBON RENTIERS     0.00     0.00   0.00           0%
+
+==============================================================================
+C. WHAT IF EVERYONE ACTS ON THE SAME INFORMATION?
+==============================================================================
+ round     p     c   c*p  mean u (peaked)  pool EUR/cap
+     0 26.70 0.869 23.20           -15.93         208.7
+     1 10.42 0.291  3.03            -7.43          43.0
+     2 10.22 0.367  3.75            -9.33          17.7
+     3 24.11 0.794 19.15           -17.62         428.9
+     4  7.81 0.175  1.37            -6.01           5.5
+     5 11.66 0.328  3.82           -10.41          76.9
+     6 12.69 0.376  4.77            -8.68          63.2
+     7 10.17 0.326  3.32            -9.56         118.4
+     8  8.06 0.210  1.70            -8.52          47.8
+
+                 actor  u_pk truth  u_pk final  d u_pk  EUR/cap truth  EUR/cap final  d EUR/cap
+                 CHINA       -5.45       -0.55    4.91          -27.0            0.0       27.0
+         UNITED STATES       -0.00       -0.00    0.00          -68.8          -27.7       41.1
+        EUROPEAN UNION      -65.57      -28.23   37.34           -3.5            0.0        3.5
+                 INDIA       -0.22       -8.62   -8.40           32.5            0.0      -32.5
+                RUSSIA      -24.30       -8.06   16.23            0.0            0.0        0.0
+             INDONESIA      -11.89       -2.38    9.51            0.0            5.4        5.4
+ADV. CARBON-PRICED CON       -8.98       -4.41    4.57          -29.9            0.0       29.9
+   LOW-CARBON FRONTIER       -1.60      -16.35  -14.75           47.0           14.6      -32.3
+  HYDROCARBON RENTIERS      -25.33       -8.06   17.27            0.0            0.0        0.0
+
+China x Indonesia 2x2 (peaked utility; rows = China, cols = Indonesia):
+
+                            Indo truth                 Indo BR
+China truth     (-5.45, -11.89) p=26.7   (-2.91, -2.69) p=25.7
+China BR         (-1.83, -5.96) p=14.9   (-1.83, -5.96) p=14.9
+
+saved data/information_risk.npz
+
+== rq2.exinterim_guardrails (slow) ==
+                                 actor  mean  median  95th %>0 dominant attack
+                                 CHINA  3.33    1.87  9.34 68%     exit-shrink
+                         UNITED STATES  1.23    0.00  9.26 34%     exit-shrink
+                        EUROPEAN UNION  2.34    2.20  6.23 58%     exit-shrink
+                                 INDIA  1.24    0.00  1.78 41%           nudge
+                                RUSSIA  3.95    3.59  9.44 92%           entry
+                             INDONESIA  5.13    5.70  9.14 87%           entry
+ADV. CARBON-PRICED CONDITIONAL JOINERS  1.03    0.53  4.09 75%     exit-shrink
+                   LOW-CARBON FRONTIER  0.88    0.00  2.41 28%     exit-shrink
+                  HYDROCARBON RENTIERS  0.87    0.05  4.60 51%           entry
+ex-interim NashConv: mean 20.00, median 18.29, 5-95%: 8.2-35.2
+
+saved data/exinterim_regrets.npz
+       design  endog NashConv max obstruction  frontier-China  US-India
+     baseline           20.30           68.9%           949.6     15.84
+      T- <= 1           16.92           68.9%           158.4     15.84
+     c >= 0.5           20.18           74.1%           158.4     15.84
+pool <= 150bn           13.07           68.9%           125.8     77.86
+    all three           12.95           74.1%           125.8     15.84
+                                 actor  hybrid regret  random regret
+                                 CHINA          2.952          3.550
+                         UNITED STATES          0.000          0.000
+                        EUROPEAN UNION          4.812          4.812
+                                 INDIA          0.000          0.000
+                                RUSSIA          2.731          2.895
+                             INDONESIA          9.155          9.200
+ADV. CARBON-PRICED CONDITIONAL JOINERS          0.650          0.650
+                   LOW-CARBON FRONTIER          0.000          0.000
+                  HYDROCARBON RENTIERS          0.000          1.234
+NashConv: hybrid 20.30 vs random 22.34
+saved data/guardrail_ablation.npz
+
+== rq2.psro_lite ==
+===== baseline design =====
+seeded attack policies: {'CHINA': 2, 'EUROPEAN UNION': 2, 'RUSSIA': 2, 'INDONESIA': 2, 'ADV. CARBON-PRICED CONDITIONAL JOINERS': 2}
+restricted-game NashConv of all-truthful: 20.30
+alpha=0.05 : truthful mass 0.000 | top: 0.21 on China + EU + Russia + Indonesia + Adv. joiners
+alpha=0.5  : truthful mass 0.000 | top: 0.25 on China + EU + Adv. joiners; 0.25 on China + EU + Indonesia + Adv. joiners; 0.25 on China + EU + Russia + Adv. joiners; 0.25 on China + EU + Russia + Indonesia + Adv. joiners
+alpha=5.0  : truthful mass 0.000 | top: 0.25 on China + EU + Adv. joiners; 0.25 on China + EU + Indonesia + Adv. joiners; 0.25 on China + EU + Russia + Adv. joiners; 0.25 on China + EU + Russia + Indonesia + Adv. joiners
+PSRO round 1 added BR policies for: ['RUSSIA', 'INDONESIA']
+after expansion: truthful mass 0.000, restricted NashConv of truthful 20.30
+
+===== pool-cap guardrail (<= 150bn) =====
+seeded attack policies: {'CHINA': 2, 'EUROPEAN UNION': 2, 'RUSSIA': 2, 'INDONESIA': 2, 'ADV. CARBON-PRICED CONDITIONAL JOINERS': 2}
+restricted-game NashConv of all-truthful: 13.07
+alpha=0.05 : truthful mass 0.000 | top: 0.41 on China + EU + Russia + Indonesia + Adv. joiners
+alpha=0.5  : truthful mass 0.000 | top: 0.50 on China + EU + Indonesia + Adv. joiners; 0.50 on China + EU + Russia + Indonesia + Adv. joiners
+alpha=5.0  : truthful mass 0.000 | top: 0.50 on China + EU + Indonesia + Adv. joiners; 0.50 on China + EU + Russia + Indonesia + Adv. joiners
+PSRO round 1 added BR policies for: ['RUSSIA', 'INDONESIA']
+after expansion: truthful mass 0.000, restricted NashConv of truthful 13.07
+
+saved data/psro_alpharank.npz
+
+== rq2.validate_alpharank ==
+  [PASS] RPS uniformity: 2.082e-16
+  [PASS] dominance residual: 0.000e+00
+  [PASS] five-population dominance residual: 0.000e+00
+  [PASS] transition rows: 0.000e+00
+  [PASS] stationary residual: 0.000e+00
+  [PASS] probability mass: 0.000e+00
+
+== rq2.sensitivity_alpharank ==
+    m   alpha   truthful   top mass  top profile
+    5    0.05   0.006878   0.063866  China + EU + Russia + Indonesia + Adv. joiners
+    5    0.50   0.000000   0.195207  China + EU + Russia + Indonesia + Adv. joiners
+    5    5.00   0.000000   0.249999  China + EU + Russia + Adv. joiners
+   10    0.05   0.001111   0.102481  China + EU + Russia + Indonesia + Adv. joiners
+   10    0.50   0.000000   0.236808  China + EU + Russia + Indonesia + Adv. joiners
+   10    5.00   0.000000   0.250000  China + EU + Russia + Adv. joiners
+   25    0.05   0.000003   0.165584  China + EU + Russia + Indonesia + Adv. joiners
+   25    0.50   0.000000   0.249887  China + EU + Russia + Adv. joiners
+   25    5.00   0.000000   0.250000  China + EU + Adv. joiners
+   50    0.05   0.000000   0.206871  China + EU + Russia + Indonesia + Adv. joiners
+   50    0.50   0.000000   0.250000  China + EU + Adv. joiners
+   50    5.00   0.000000   0.250000  China + EU + Russia + Adv. joiners
+  100    0.05   0.000000   0.239985  China + EU + Russia + Adv. joiners
+  100    0.50   0.000000   0.250000  China + EU + Indonesia + Adv. joiners
+  100    5.00   0.000000   0.250000  China + EU + Indonesia + Adv. joiners
+  200    0.05   0.000000   0.249579  China + EU + Russia + Indonesia + Adv. joiners
+  200    0.50   0.000000   0.250000  China + EU + Adv. joiners
+  200    5.00   0.000000   0.250000  China + EU + Adv. joiners
+
+== rq2.ablation_alpharank ==
+removed attack        truthful mass        c        p  top profile
+CHINA                      0.000000 0.691436 21.741588  EU + Russia + Indonesia + Adv. joiners
+EUROPEAN UNION             0.000000 0.375560 12.690859  China + Russia + Adv. joiners
+RUSSIA                     0.000000 0.291142 10.422429  China + EU + Adv. joiners
+INDONESIA                  0.000000 0.291142 10.422429  China + EU + Adv. joiners
+ADV. CARBON-PRICED C       0.000000 0.383931 13.028330  China + EU + Russia + Indonesia
+saved data/alpharank_leave_one_out.npz
+
+== rq2.sensitivity_oracles ==
+design            random NashConv
+baseline                   22.340
+pool cap                   16.793
+all guardrails             16.077
+
+== rq2.vote_structure ==
+=== BASELINE ===
+p=26.70  c=0.8686  T+=0.24  T-=0.3417
+members: ['CHINA', 'UNITED STATES', 'EUROPEAN UNION', 'INDIA', 'ADV. CARBON-PRICED CONDITIONAL JOINERS', 'LOW-CARBON FRONTIER']
+
+=== (A) EU SPLIT (sub-votes inherit the parent's preferences) ===
+EU as 1 vote: joins=True  price=26.70  peaked-u=-65.572
+EU as 2 votes: joins=True  price=26.70  peaked-u=-65.572   [same]
+EU as 3 votes: joins=True  price=26.70  peaked-u=-65.572   [same]
+EU as 4 votes: joins=True  price=26.70  peaked-u=-65.572   [same]
+Splitting preserves preferences, so it is a pure test of vote count;
+it changes nothing here.
+
+=== (B) PAIRWISE MERGE, per-member and decomposed ===
+dU columns are peaked utility vs baseline, each member scored against
+its OWN true willingness. 'synthetic' is the discarded old metric: the
+averaged actor's own satisfaction, shown to expose the difference.
+
+-- pairs where BOTH members gain (a merge that would actually form): 1/36
+           i     j  dU_i  dU_j  boundary_i  averaging_i   dp
+EUROPEAN UNI INDIA  0.02  0.12         0.0         0.02 0.03
+
+-- pairs the OLD synthetic metric ranked as gains, re-scored per member:
+           i            j  synthetic   dU_i   dU_j  pareto
+   INDONESIA ADV. CARBON-       8.98   1.93  -3.05   False
+      RUSSIA ADV. CARBON-       8.98   0.27  -1.64   False
+ADV. CARBON- HYDROCARBON        4.31  -0.20  -0.62   False
+       CHINA    INDONESIA       3.51  -0.17  -0.35   False
+       CHINA       RUSSIA       2.42  -0.51  -1.30   False
+ADV. CARBON- LOW-CARBON F       1.60  -0.10 -24.83   False
+       CHINA LOW-CARBON F       1.60  -2.35   0.01   False
+LOW-CARBON F HYDROCARBON        1.43 -12.35  -1.30   False
+   8 of these 8 are not gains for either real member once the
+   cost of reporting the average is charged.
+
+-- channel decomposition (mean over all pairs, both members pooled):
+   coalition-boundary channel (world1-world0): mean +0.358, max +25.333, share positive 28%
+   price-of-averaging channel (world2-world1):  mean -3.567, max +32.411, share positive 26%
+
+=== (C) PRICE MOVES UNDER MERGE ===
+  UNITED STA + RUSSIA: -5.14
+  UNITED STA + EUROPEAN U: +4.70
+  UNITED STA + ADV. CARBO: +3.96
+  CHINA + UNITED STA: +3.47
+  UNITED STA + HYDROCARBO: -2.12
+  EUROPEAN U + RUSSIA: +1.93
+  CHINA + RUSSIA: +1.93
+  CHINA + LOW-CARBON: -1.84
+27/36 pairs move price; max |dp| = 5.14 EUR/t
+
+=== (D) TRANSFER NETTING: blocs that straddle ebar ===
+t+- are levied on max(e-ebar,0) and max(ebar-e,0) at different rates, so a
+bloc spanning ebar nets its members out before the rates apply. Sign
+convention: positive = net receipts. 'netting effect' is the bloc's
+position minus what the two would hold apart.
+
+           A            B  bloc position (EUR bn)  sum apart (EUR bn)  netting effect (EUR bn)
+       CHINA        INDIA                  -17.74               82.94                  -100.68
+UNITED STATE        INDIA                   68.47              141.35                   -72.88
+      RUSSIA LOW-CARBON F                   38.51               63.16                   -24.65
+       INDIA       RUSSIA                   67.81               81.77                   -13.96
+ADV. CARBON- LOW-CARBON F                   24.39               33.73                    -9.33
+       CHINA LOW-CARBON F                  -12.58               -5.40                    -7.18
+       INDIA ADV. CARBON-                   41.85               47.52                    -5.67
+LOW-CARBON F HYDROCARBON                    29.13               33.32                    -4.19
+       INDIA HYDROCARBON                    54.92               58.51                    -3.59
+       CHINA    INDONESIA                  -38.75              -37.37                    -1.38
+   INDONESIA ADV. CARBON-                   -5.06               -4.00                    -1.06
+EUROPEAN UNI LOW-CARBON F                   23.29               23.97                    -0.68
+EUROPEAN UNI        INDIA                   43.46               44.11                    -0.65
+EUROPEAN UNI    INDONESIA                    2.88                3.48                    -0.60
+
+14/14 straddling blocs are WORSE off merged than apart; largest loss 100.68 EUR bn.
+The asymmetric rates therefore penalise straddling rather than reward it:
+a bloc spanning ebar forfeits the beneficiary member's gross claim, which
+is a deterrent to merger-based gaming of the transfer pool, not a loophole.
+
+saved data/vote_structure.npz
+
+== rq2.bruteforce ==
+4-actor world: ['CHINA', 'UNITED STATES', 'INDIA', 'INDONESIA']
+truthful p=29.05 c=0.951 members=['CHINA', 'UNITED STATES', 'INDIA']
+
+EXHAUSTIVE regret (2-unit grid, no oracle):
+  CHINA            regret=  6.10  
+  UNITED STATES    regret=  0.00  PIVOT
+  INDIA            regret=  0.96  
+  INDONESIA        regret= 12.57  BOUNDARY
+
+== rq2.robustness ==
+==============================================================================
+A. LOCALITY OF THE INDONESIA ENTRY ATTACK
+==============================================================================
+sweeping Indonesia's reported alpha_base over [-40, 40] in steps of 0.5
+coalition changes between db = +2.5 and +3.0: 6 -> 7 members
+  price 26.703 -> 25.774, coverage 0.8686 -> 0.9036
+  the operating point is piecewise constant in the report and jumps
+  only at the boundary — which is why the regret is a step, not a slope.
+distinct operating points visited: 21
+saved data/indonesia_locality_sweep.npz
+
+==============================================================================
+B. SELF-CONSISTENCY SLACK
+==============================================================================
+An outsider within `slack` EUR/t of the price is treated as unwilling.
+The reported results use slack = 0.01.
+
+ slack (EUR/t)    p      c  members  NashConv  Indonesia regret
+        0.0000 26.7 0.8686        6     19.65              9.19
+        0.0001 26.7 0.8686        6     19.65              9.19
+        0.0010 26.7 0.8686        6     19.65              9.19
+        0.0100 26.7 0.8686        6     19.62              9.19
+        0.1000 26.7 0.8686        6     19.54              9.19
+        0.5000 26.7 0.8686        6     19.13              9.19
+
+6/6 slack settings give the same truthful price.
+NashConv over the sweep: 19.13 to 19.65 (reported 19.62 at slack = 0.01).
+The tolerance sets which side of a tie an indifferent outsider falls on;
+it does not create the exploitability.
+
+==============================================================================
+C. SOLVER AGREEMENT UNDER MISREPORTS
+==============================================================================
+ #     deviator  p (vectorised)  p (engine.themis)  |dp| verdict
+ 0 ADV. CARBON-          26.703             26.703   0.0      OK
+ 1 LOW-CARBON F          26.336             26.336   0.0      OK
+ 2 EUROPEAN UNI          26.703             26.703   0.0      OK
+ 3        INDIA          26.626             26.626   0.0      OK
+ 4 UNITED STATE          25.663             25.663   0.0      OK
+ 5    INDONESIA          27.610             27.610   0.0      OK
+ 6 LOW-CARBON F          26.497             26.497   0.0      OK
+ 7 LOW-CARBON F          26.291             26.291   0.0      OK
+ 8 HYDROCARBON           26.703             26.703   0.0      OK
+ 9    INDONESIA          26.703             26.703   0.0      OK
+10 UNITED STATE          31.399             31.399   0.0      OK
+11 LOW-CARBON F          26.626             26.626   0.0      OK
+12 LOW-CARBON F          26.336             26.336   0.0      OK
+13 ADV. CARBON-          24.105             24.105   0.0      OK
+14       RUSSIA          26.703             26.703   0.0      OK
+15 EUROPEAN UNI          26.703             26.703   0.0      OK
+16    INDONESIA          26.128             26.128   0.0      OK
+17       RUSSIA          26.703             26.703   0.0      OK
+18       RUSSIA          26.703             26.703   0.0      OK
+19       RUSSIA          26.703             26.703   0.0      OK
+20 LOW-CARBON F          26.703             26.703   0.0      OK
+21        CHINA          50.885             50.885   0.0      OK
+22 UNITED STATE          25.663             25.663   0.0      OK
+23 HYDROCARBON           27.528             27.528   0.0      OK
+
+24/24 deviated profiles agree between the pandas
+reference engine and the vectorised solver that produces every headline.
+
+saved data/slack_sweep.npz
+
+== rq2.collect_headlines ==
+fixed-coverage control (peaked, fine grid)...
+endogenous coverage (peaked, fine grid)...
+  NashConv fixed = 0.0000, endogenous = 19.628
+obstruction...
+headline collusion pair (frontier <- China)...
+same pair under the pool-cap guardrail (regime-map residual)...
+saved data/headlines.json
+
+== rq2.validate ==
+=== validate_rq2 ===
+
+  [PASS] all figure inputs present
+  [PASS] endogenous price ≈ 26.70 — p=26.7034
+  [PASS] endogenous c ≈ 0.8686 — c=0.868644
+  [PASS] fixed vs endogenous price
+  [PASS] coarse vs fine grid
+  [PASS] T rates match control
+  [PASS] fixed-coverage peaked NashConv = 0 — NashConv=0.0000
+  [PASS] endogenous peaked NashConv ≈ 19.6 — NashConv=19.616
+  [PASS] hybrid oracle reproducible
+  [PASS] cma_minimize finds minimum — f=0.0036, x=[ 2.94556108 -0.97502132]
+  [PASS] China obstruction damage ≈ 69% — 68.9%
+  [PASS] engine.themis agrees under misreports — max |dp| = 3.55e-15
+  [PASS] fixed coverage: peaked NashConv = 0 — 0.0000
+  [PASS] fixed coverage: cap reading IS manipulable — 136.85
+  [PASS] truthful point invariant to self-consistency slack — p=26.7034
+
+All checks passed.
+
+== rq2.manifest ==
+wrote reference_outputs/experiment_manifest.md
+
+== rq2.make_figures ==
+wrote 17 figures to figures
+
+Completed. Derived outputs:
+  data/               numeric results consumed by figures
+  figures/            PDF and PNG figures
+  reference_outputs/  experiment manifest
