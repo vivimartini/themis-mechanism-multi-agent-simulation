@@ -1,4 +1,4 @@
-"""RQ2 report-semantics experiment."""
+"""Compares the peaked, ceiling and transfer readings of p_i(c) at fixed coverage."""
 import numpy as np
 import pandas as pd
 

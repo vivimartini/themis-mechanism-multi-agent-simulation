@@ -1,4 +1,4 @@
-"""RQ2 endogenous-coverage experiment."""
+"""Vectorised self-consistent Themis solver and the endogenous-coverage regret table."""
 import numpy as np
 import pandas as pd
 from paths import ACTORS_CSV

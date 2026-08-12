@@ -1,4 +1,4 @@
-"""RQ2 obstruction and vote-selling experiment."""
+"""Minimises the mechanism objective per actor, then prices every ordered buyer-seller pair."""
 import numpy as np
 import pandas as pd
 import rq2.endogenous_coverage as R

@@ -1,4 +1,4 @@
-"""RQ2 fixed-coverage control."""
+"""Theorem-covered control: coverage and transfer rates frozen, quantile selection live."""
 import numpy as np
 import pandas as pd
 from paths import ACTORS_CSV

@@ -1,4 +1,4 @@
-"""RQ2 vote-structure analysis."""
+"""Splits and merges actors to test whether vote count alone moves the operating point."""
 import numpy as np
 import pandas as pd
 from paths import ACTORS_CSV, VOTESTRUCT_NPZ

@@ -1,4 +1,4 @@
-"""RQ2 climate-benefit sensitivity analysis."""
+"""Break-even climate valuation above which obstruction stops paying."""
 import numpy as np
 import pandas as pd
 
@@ -40,7 +40,10 @@ def obstruction_breakeven():
         out = R.solve_full(ab, ac)
         d_cp = cp(out) - CP0
         d_tr = R.utility(i, out, "transfer") - R.utility(i, R.TRUTHFUL, "transfer")
-        if d_cp < -1e-9 and d_tr > 0:
+        if out is None:
+            bstar = float("nan")
+            verdict = "destroys the mechanism (no self-consistent point)"
+        elif d_cp < -1e-9 and d_tr > 0:
             bstar = d_tr / (-d_cp)
             verdict = f"{bstar:.3f}"
         elif d_tr <= 0:

@@ -1,4 +1,4 @@
-"""RQ2 PSRO-lite analysis."""
+"""Restricted empirical game over discovered attacks, ranked by multi-population Alpha-Rank."""
 import itertools
 import numpy as np
 import pandas as pd

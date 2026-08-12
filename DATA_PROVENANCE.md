@@ -36,10 +36,11 @@ empirical estimates produced by this repository.
 - Russia, the low-carbon frontier, and hydrocarbon rentiers use a chosen lower
   bound of zero.
 - Indonesia floors a negative net effective rate to zero.
-- Advanced conditional joiners use an aggregated `5.80` base term. The
-  dissertation describes the bloc value as emissions-weighted; the CSV
-  narrative currently says “pop-weighted headline”. Treat the implemented
-  value as a fixed calibration input rather than a regenerable aggregation.
+- Advanced conditional joiners use an aggregated `5.80` base term, emissions
+  weighted across the bloc and adjusted for free allocation. The CSV's
+  `headline_price` column for this row is population-weighted and indicative
+  only; it is not the basis of `alpha_base`. Treat the implemented value as a
+  fixed calibration input rather than a regenerable aggregation.
 
 See Appendix A, Tables A.1–A.3, of the dissertation for the full narrative and
 bibliographic references.

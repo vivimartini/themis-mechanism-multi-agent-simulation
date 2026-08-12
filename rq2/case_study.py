@@ -1,4 +1,4 @@
-"""RQ2 deviation case studies."""
+"""Per-actor before/after tables for the three largest unilateral deviations."""
 import numpy as np
 import pandas as pd
 

@@ -9,14 +9,6 @@ mkdir -p reference_outputs
 START_EPOCH="$(date +%s)"
 START_UTC="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
 
-./run_all.sh 2>&1 \
-  | sed "s|$ROOT/||g" \
-  | tee reference_outputs/full_run.txt
-
-END_EPOCH="$(date +%s)"
-DURATION="$((END_EPOCH - START_EPOCH))"
-PY="${PY:-.venv/bin/python}"
-
 if GIT_SHA="$(git rev-parse HEAD 2>/dev/null)"; then
   :
 else
@@ -28,6 +20,14 @@ else
   GIT_STATE="clean"
 fi
 
+./run_all.sh 2>&1 \
+  | sed "s|$ROOT/||g" \
+  | tee reference_outputs/full_run.txt
+
+END_EPOCH="$(date +%s)"
+DURATION="$((END_EPOCH - START_EPOCH))"
+PY="${PY:-.venv/bin/python}"
+
 {
   printf 'Dissertation run provenance\n'
   printf '============================\n'
@@ -35,8 +35,7 @@ fi
   printf 'duration_seconds: %s\n' "$DURATION"
   printf 'git_sha: %s\n' "$GIT_SHA"
   printf 'git_state: %s\n' "$GIT_STATE"
-  printf 'platform: '
-  uname -a
+  printf 'platform: %s %s %s\n' "$(uname -s)" "$(uname -r)" "$(uname -m)"
   printf 'python: '
   "$PY" --version
   printf '\nPinned environment\n'

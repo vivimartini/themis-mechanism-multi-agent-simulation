@@ -1,4 +1,4 @@
-"""RQ2 information and risk analysis."""
+"""How much a deviator must know: prior-only attacks, noise sensitivity, simultaneous response."""
 import cma
 import numpy as np
 import pandas as pd

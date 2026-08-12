@@ -1,4 +1,4 @@
-"""RQ2 exhaustive small-world check."""
+"""Four-actor world solved on a full 2-unit grid, so no optimiser enters the regret."""
 import numpy as np
 import pandas as pd
 from paths import ACTORS_CSV

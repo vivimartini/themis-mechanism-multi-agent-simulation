@@ -21,12 +21,12 @@ where reports also change membership and transfer rates.
 The dissertation describes report perturbations as lying in `[-60, 60]^2`.
 The CMA-ES implementation that generated the reported results instead searches
 over `R^2`: [`rq2/oracle.py`](rq2/oracle.py) deliberately passes no bounds to
-`cma.CMAEvolutionStrategy`. At least one reported best response (China's
-coverage-coefficient perturbation, approximately `-70.1`) lies outside the
-stated box. The repository preserves those submitted results rather than
-silently changing the optimisation problem. They must therefore be interpreted
-as results for the unbounded search used by the code, not as exhaustive evidence
-over the box stated in the dissertation. A bounded-domain rerun is future work.
+`cma.CMAEvolutionStrategy`. One reported best response, China's
+coverage-coefficient perturbation of approximately `-70.1`, lies outside the
+stated box. Restricted to the box, China's regret falls from 3.62 to 2.95 and
+total NashConv from 19.63 to 18.96; the dissertation states this in Sections 4.1
+and 6.4. The repository preserves the unbounded implementation used for the
+submitted headline results.
 
 ## Requirements
 
@@ -98,7 +98,7 @@ Regenerate derived data and figures after changing their producing module.
 ## Citation
 
 Use the metadata in [`CITATION.cff`](CITATION.cff). The canonical repository is
-<https://github.com/vivimartini/themis-mechanism-egta>.
+<https://github.com/vivimartini/themis-mechanism-multi-agent-simulation>.
 
 This repository supports assessment and reproducibility of the dissertation; it
 is not a general-purpose software release. No reuse license has yet been

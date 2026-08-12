@@ -1,4 +1,4 @@
-"""RQ2 robustness checks."""
+"""Attack locality, self-consistency slack sweep, and reference-vs-vectorised solver agreement."""
 import numpy as np
 import pandas as pd
 

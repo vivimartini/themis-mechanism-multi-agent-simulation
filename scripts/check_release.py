@@ -90,6 +90,14 @@ TEXT_FILES = (
     REFERENCE / "experiment_manifest.md",
     REFERENCE / "full_run.txt",
     REFERENCE / "run_provenance.txt",
+    *sorted(ROOT.glob("*.py")),
+    *sorted((ROOT / "engine").glob("*.py")),
+    *sorted((ROOT / "archetypes").glob("*.py")),
+    *sorted((ROOT / "rq2").glob("*.py")),
+    *sorted((ROOT / "scripts").glob("*.py")),
+    *sorted(ROOT.glob("*.sh")),
+    *sorted((ROOT / "scripts").glob("*.sh")),
+    *sorted((ROOT / ".github" / "workflows").glob("*.yml")),
 )
 
 SECRET_PATTERN = re.compile(
@@ -160,11 +168,12 @@ def main() -> int:
 
     leaked_paths: list[str] = []
     secret_hits: list[str] = []
+    posix_users = "/" + "Users" + "/"
     for path in TEXT_FILES:
         if not path.is_file():
             continue
         text = path.read_text(errors="replace")
-        if "/Users/" in text or re.search(r"[A-Za-z]:\\\\Users\\\\", text):
+        if posix_users in text or re.search(r"[A-Za-z]:\\Users\\", text):
             leaked_paths.append(str(path.relative_to(ROOT)))
         if SECRET_PATTERN.search(text):
             secret_hits.append(str(path.relative_to(ROOT)))

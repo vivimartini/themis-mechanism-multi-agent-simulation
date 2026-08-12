@@ -1,7 +1,7 @@
 """Reference Themis mechanism."""
 from __future__ import annotations
 from dataclasses import dataclass
-from typing import Dict, List, Any, Optional
+from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 import pandas as pd
 
@@ -146,11 +146,11 @@ def run_mechanism_selfconsistent(actor_df: pd.DataFrame, config: Optional[Engine
             price = min(member_prefs)
             if price <= 0:
                 continue
-            # Self-consistency: all members willing, all non-members not
+            # Self-consistency: no non-member is willing. Member willingness
+            # holds by construction because price is their minimum preference.
             non_members = [i for i in range(N) if i not in members]
-            all_in = all(prefs[i] >= price - 0.01 for i in members)
             all_out = all(prefs[i] < price + 0.01 for i in non_members)
-            if not (all_in and all_out):
+            if not all_out:
                 continue
             obj = coverage * price
             if best_global is None or obj > best_global["obj"]:
@@ -161,8 +161,10 @@ def run_mechanism_selfconsistent(actor_df: pd.DataFrame, config: Optional[Engine
                 }
 
     if best_global is None:
-        # Fallback to ex-ante version
-        return run_mechanism(actor_df, config)
+        raise RuntimeError(
+            "no self-consistent operating point; the ex-ante weighted-quantile "
+            "solver is a different model and must not be substituted silently"
+        )
 
     bg = best_global
     join = np.zeros(N, dtype=bool)
@@ -288,65 +290,6 @@ def diagnostics(actor_df: pd.DataFrame, res: Dict[str, Any], tolerance: float = 
     add("No missing alpha parameters", not df[["alpha_base", "alpha_cov", "alpha_trf"]].isna().any().any(), "alpha_base, alpha_cov, alpha_trf present")
     add("Fixed world-average benchmark", abs(res["config"].ebar - EBAR_DEFAULT) < 1e-12, f"ē = {res['config'].ebar}")
     return pd.DataFrame(rows)
-
-
-def split_country_from_group(actor_df: pd.DataFrame, country_df: pd.DataFrame, country_name: str) -> pd.DataFrame:
-    """Split a country from its existing actor group.
-    Creates a new individual actor with per-country alpha values from country_data.csv.
-    Handles residual groups from previous splits.
-    """
-    actors = normalise_actor_df(actor_df).copy()
-    countries = country_df.copy()
-    match = countries[countries["country"].astype(str).str.lower() == country_name.lower()]
-    if match.empty:
-        return actors
-    ctry = match.iloc[0]
-    parent_group = str(ctry.get("actor_group", ""))
-    parent_idx = ctry.get("actor_idx")
-    # Find parent: try exact idx first, then name match (including residual groups)
-    parent = pd.DataFrame()
-    if pd.notna(parent_idx):
-        parent = actors[actors["idx"].astype(float) == float(parent_idx)]
-    if parent.empty:
-        # Try matching group name including "residual" variants
-        mask = actors["name"].astype(str).str.contains(parent_group, case=False, na=False)
-        parent = actors[mask]
-    if parent.empty:
-        return actors
-    # Check country isn't already split out
-    if actors["name"].astype(str).str.upper().str.contains(country_name.upper(), na=False).any():
-        return actors
-    p = parent.iloc[0].copy()
-    pop = float(ctry["population_m"]); e = float(ctry["emissions_cap"]); gdp = float(ctry["gdp_cap"])
-    total_emissions = p["pop_m"] * p["e"]
-    remaining_pop = max(float(p["pop_m"]) - pop, 0.0)
-    remaining_emissions = max(total_emissions - pop * e, 0.0)
-    if remaining_pop > 1e-9:
-        actors.loc[parent.index[0], "pop_m"] = remaining_pop
-        actors.loc[parent.index[0], "e"] = remaining_emissions / remaining_pop
-        actors.loc[parent.index[0], "gdp_cap"] = max(float(p["gdp_cap"]), 1.0)  # keep parent calibration simple
-        actors.loc[parent.index[0], "name"] = f"{p['name']} residual"
-    else:
-        actors = actors.drop(parent.index[0])
-    new = p.copy()
-    new["idx"] = float(actors["idx"].max()) + 1
-    new["name"] = str(ctry["country"]).upper()
-    new["e"] = e; new["pop_m"] = pop; new["gdp_cap"] = gdp
-    new["headline_price"] = float(ctry.get("headline_price", 0) or 0)
-    # Use per-country alpha values if available, otherwise inherit parent
-    if "alpha_base_own" in ctry.index and pd.notna(ctry.get("alpha_base_own")) and float(ctry["alpha_base_own"]) != 0:
-        new["alpha_base"] = float(ctry["alpha_base_own"])
-    elif "alpha_base_own" in ctry.index and float(ctry.get("alpha_base_own", -1)) == 0:
-        new["alpha_base"] = 0.0
-    if "alpha_cov_own" in ctry.index and pd.notna(ctry.get("alpha_cov_own")) and float(ctry["alpha_cov_own"]) != 0:
-        new["alpha_cov"] = float(ctry["alpha_cov_own"])
-    elif "alpha_cov_own" in ctry.index and float(ctry.get("alpha_cov_own", -1)) == 0:
-        new["alpha_cov"] = 0.0
-    new["alpha_trf"] = min(20.0, 20000.0 / max(gdp, 1.0))
-    new["narrative"] = f"Split from {p['name']}. Uses country-specific α_base={new['alpha_base']:.1f}, α_cov={new['alpha_cov']:.0f} from Data Bible research."
-    actors = pd.concat([actors, pd.DataFrame([new])], ignore_index=True)
-    actors["weight"] = actors["pop_m"] * actors["e"]
-    return normalise_actor_df(actors)
 
 
 if __name__ == "__main__":

@@ -5,8 +5,8 @@ type: software
 authors:
   - family-names: Martini
     given-names: Vivika
-year: 2026
-repository-code: "https://github.com/vivimartini/themis-mechanism-egta"
+date-released: "2026-08-12"
+repository-code: "https://github.com/vivimartini/themis-mechanism-multi-agent-simulation"
 keywords:
   - carbon pricing
   - mechanism design

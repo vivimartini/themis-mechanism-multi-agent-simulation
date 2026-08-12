@@ -262,7 +262,7 @@ else:
     if P is not None and np.isfinite(P["sink_c"][0]):
         # Label up-and-LEFT: offset to the right put the text beside the China
         # exit marker, 0.18 further along c, so it read as labelling that point.
-        pts.append(("alpha-Rank sink", float(P["sink_c"][0]), float(P["sink_p"][0]),
+        pts.append(("Alpha-Rank sink", float(P["sink_c"][0]), float(P["sink_p"][0]),
                     RED, "s", (-10, 12)))
     if H.get("collusion", {}).get("c"):
         pts.append(("frontier-China", H["collusion"]["c"], H["collusion"]["p"],
@@ -358,7 +358,7 @@ ROWS = (0.66, 0.20)                       # top row, bottom row (box bottoms)
 stages = [
     ("Country data +\ncalibrated parameters", "env"),
     ("Preference layer\n$p_i(c,T)$", "env"),
-    ("Themis solver $\\mathcal{M}(r)$:\n512-coalition,\nself-consistent", "adv"),
+    ("Themis solver $\\mathcal{M}(r)$:\n441-coalition,\nself-consistent", "adv"),
     ("Best-response oracle:\nportfolio + random\n+ CMA-ES", "adv"),
     ("Regret / NashConv\n+ attack labels", "test"),
     ("$\\alpha$-Rank\nmeta-solver", "test"),

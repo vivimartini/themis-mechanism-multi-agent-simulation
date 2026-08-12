@@ -28,10 +28,10 @@ from pathlib import Path
 # A4 (21.0cm) less 2x2.6cm margins, in TeX points (72.27 pt/in).
 LINEWIDTH_PT = (21.0 - 2 * 2.6) / 2.54 * 72.27
 
-# dissertation filename -> width factor in \includegraphics
+# repository filename -> width factor used by the corresponding \includegraphics
 WIDTHS = {
-    "fig_mc_operating_price.pdf": 0.72,
-    "fig_rq2_pipeline.pdf": 0.98,
+    "fig_mc_operating_price.pdf": 1.00,
+    "fig_rq2_pipeline.pdf": 1.00,
     "fig_optimizer_comparison.pdf": 0.98,
     "fig_nashconv_fixed_vs_endogenous.pdf": 0.55,
     "fig_regret_geography.pdf": 0.72,

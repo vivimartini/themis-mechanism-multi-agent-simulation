@@ -1,4 +1,4 @@
-"""RQ2 ex-interim and guardrail experiments."""
+"""120 sampled worlds, the guardrail ablation, and the hybrid-vs-random oracle comparison."""
 import numpy as np
 import pandas as pd
 import rq2.coarse_solver as F
