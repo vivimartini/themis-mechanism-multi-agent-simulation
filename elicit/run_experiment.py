@@ -73,6 +73,8 @@ def run_nine_actor(budget: int, global_draws: int):
                 "truthful welfare": welfare,
                 "welfare loss": loss,
                 "total found regret": values.sum(),
+                "weighted regret": float(np.dot(model.weights, values)),
+                "max regret": values.max(),
             })
     details = {
         "best_report": best_report,
@@ -226,6 +228,8 @@ def main(argv=None) -> None:
         actor_names=np.array(load_model().names, dtype="U48"),
         welfare_loss=losses,
         total_regret=regrets,
+        weighted_regret=per_actor @ load_model().weights,
+        max_regret=per_actor.max(axis=-1),
         truthful_price=prices,
         actor_regret=per_actor,
         best_report=details["best_report"],

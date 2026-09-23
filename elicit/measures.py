@@ -20,6 +20,7 @@ from elicit.rules import (
     peak_quantile,
     region_intersection_midpoint,
     region_max_coverage,
+    region_themis_objective,
     region_weighted_median_midpoints,
 )
 from elicit.utilities import QuadraticSurplusModel
@@ -27,8 +28,8 @@ from rq2.oracle import cma_minimize, DEFAULT_SEED
 
 FormatName = Literal["full", "peak", "region"]
 RuleName = Literal[
-    "welfare", "quantile", "intersection-midpoint", "max-coverage",
-    "weighted-median",
+    "welfare", "quantile", "median", "intersection-midpoint", "max-coverage",
+    "weighted-median", "themis",
 ]
 
 
@@ -63,6 +64,8 @@ RULE_SEED_OFFSET = {
     "intersection-midpoint": 2000,
     "max-coverage": 3000,
     "weighted-median": 4000,
+    "median": 5000,
+    "themis": 6000,
 }
 
 
@@ -85,16 +88,23 @@ def select(
 ) -> Outcome:
     if spec == ExperimentSpec("full", "welfare"):
         return full_welfare(reports, model.weights, normalise=normalise_full)
+    # A scalar peak carries no shape information, so the mechanism infers
+    # membership from the population-average peak fraction, never an actor's own.
+    assumed_shape = float(np.mean(model.peak_fractions))
     if spec == ExperimentSpec("peak", "quantile"):
         return peak_quantile(
-            reports, model.weights, model.coverage, model.peak_fraction
+            reports, model.weights, model.coverage, assumed_shape
         )
+    if spec == ExperimentSpec("peak", "median"):
+        return peak_quantile(reports, model.weights, 0.5, assumed_shape)
     if spec == ExperimentSpec("region", "intersection-midpoint"):
         return region_intersection_midpoint(reports, model.weights)
     if spec == ExperimentSpec("region", "max-coverage"):
         return region_max_coverage(reports, model.weights)
     if spec == ExperimentSpec("region", "weighted-median"):
         return region_weighted_median_midpoints(reports, model.weights)
+    if spec == ExperimentSpec("region", "themis"):
+        return region_themis_objective(reports, model.weights)
     raise ValueError(f"unsupported format/rule combination: {spec}")
 
 
@@ -192,6 +202,11 @@ def best_response(
         # those breakpoints and the actor's true peak in addition to the grid.
         candidates = set(float(x) for x in grid)
         if not strict_grid:
+            # Membership inferred from an assumed shape flips at report values
+            # unrelated to other reports, so also scan at five-cent resolution.
+            candidates.update(float(x) for x in np.linspace(
+                0.0, price_limit, int(np.ceil(price_limit / 0.05)) + 1
+            ))
             candidates.add(model.peak(actor))
             for report in reports:
                 candidates.update((max(0.0, report.peak - 1e-8), report.peak,

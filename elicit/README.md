@@ -18,29 +18,58 @@ against the actor's true quadratic, with an outside option of zero.
 
 - **Full utility:** peak, upper zero, and scale; scale is normalised before
   reported welfare is maximised.
-- **Preferred price:** one scalar, aggregated by the fixed weighted-quantile
-  rule.
-- **Acceptable interval:** lower and upper bounds, evaluated using either the
-  greatest-overlap midpoint or maximum participating emissions.
+- **Preferred price:** one scalar, aggregated by a weighted quantile at either
+  the Themis coverage level (`0.869`) or the median. A scalar carries no shape
+  information, so membership is inferred from the population-average peak
+  fraction.
+- **Acceptable interval:** lower and upper bounds, evaluated with four rules:
+  greatest-overlap midpoint, maximum participating emissions, weighted median
+  of midpoints, and the Themis objective (participating emissions × price).
 
-The robustness run also evaluates the emission-weighted median of interval
-midpoints.
+Regret is reported unweighted, weighted by emissions (the welfare weights), and
+as the largest single-actor regret.
 
-## Main result
+## Results
 
-For the central peak-location scenario:
+Full tables: `reference_outputs/elicitation_rule_comparison.md`.
 
-- Full utility has zero truthful welfare loss and total found regret `0.9031`.
-- Preferred-price reporting has truthful welfare loss `0.1988` and zero regret.
-- The two original interval rules have welfare loss `0.3055` and total found
-  regret `2.9695` and `2.9925`.
-- Replacing those rules with the weighted median reduces interval regret to
-  zero in the homogeneous case and `0.013`–`0.053` in three heterogeneous
-  cases.
+- **The aggregation rule matters as much as the report format.** Whenever
+  peaks sit at or above the middle of the acceptable interval, the interval
+  midpoint equals the peak. Interval reports with a weighted median are then
+  the same rule as peak reports with a median. The apparent advantage of
+  interval reports in that comparison comes from the quantile level (`0.869`
+  against `0.5`), not from the format.
+- **Coverage-first interval rules act almost as a veto.** Every true interval
+  starts at zero when peaks sit at or below the middle. The midpoint and
+  maximum-coverage rules then include every actor, and the lowest ceiling sets
+  the price. This produces the large regrets (`2.97`, `2.99`), a third of which
+  comes from one actor holding 2.9% of emissions.
+- **Under the Themis objective, interval reports remain manipulable because
+  members narrow their intervals to steer the price toward their own peak.**
+  In the central scenario, the truthful price is `27.32` with China, the United
+  States, the EU, and the conditional joiners as members. Found regret is
+  `0.75` unweighted and `0.19` emissions-weighted, all held by those four.
+  China reports `[7.33, 16.84]` instead of `[0, 33.67]`; cutting its upper
+  bound to its peak moves the price to `16.84`, its peak, and India joins. The
+  United States and the joiners also lower their upper bounds. The EU, whose
+  peak lies above the truthful price, raises its lower bound above the US
+  ceiling instead, which removes the United States and raises the price to
+  `33.67`. Full-utility reports have `0.90` unweighted and `0.08` weighted, so
+  the ranking of the two formats depends on the weighting.
+- **Zero regret for peak reports depends on how membership is decided.** If the
+  price is set first and each actor then joins only if it gains, the payoff
+  `max(0, s(p))` stays single-peaked. The fixed quantile is then strategy-proof
+  (Moulin, 1980) even when peak fractions differ across actors; a grid check
+  over all four peak scenarios finds no profitable report at either quantile
+  level. If instead membership is inferred from the reported peak, using the
+  population-average peak fraction, the `0.869` quantile has found regret
+  `0.42`–`0.92` in the heterogeneous scenarios, and the median `0.41` in one of
+  them. This is the same weakness as membership decided by reports in the
+  dissertation.
 
-The large interval-report regrets are therefore specific to the selection rule,
-not to interval reports alone. Continuous-format regrets are search lower
-bounds, not exact optima.
+Continuous-format regrets are search lower bounds, not exact optima. The
+experiment holds coverage fixed and disables transfers, so it compares report
+formats in a stylised setting rather than testing Themis itself.
 
 ## Reproduction
 
@@ -73,4 +102,5 @@ implementations on 500 seeded random profiles.
 - `reference_outputs/elicitation_experiment_manifest.md`
 - `reference_outputs/elicitation_hand_check.md`
 - `reference_outputs/elicitation_differential_check.md`
+- `reference_outputs/elicitation_rule_comparison.md`
 

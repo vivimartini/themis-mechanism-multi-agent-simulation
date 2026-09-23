@@ -9,7 +9,7 @@ and does not alter any submitted result.
 | `elicit.hand_check` | Can the largest central-scenario midpoint deviation be reproduced directly? | deterministic arithmetic check | central scenario, midpoint rule | true quadratic surplus | `reference_outputs/elicitation_hand_check.md` |
 | `elicit.enumerate_small` | Does the format ordering survive every profile in a finite three-actor game? | exhaustive | 4-point price grid plus truthful report; no optimiser | true quadratic surplus | `data/elicitation_joint_enumeration.json` |
 | `elicit.differential_check` | Do independent implementations of all rules and scoring agree? | seeded random profiles | 500 profiles, seed 20260923 | true quadratic surplus | `reference_outputs/elicitation_differential_check.md` |
-| `elicit.robustness` | Does region manipulation survive a weighted-median rule and heterogeneous peak locations? | deterministic scenario sweep | 4 peak scenarios; 3 region rules; seed 42 | true quadratic surplus | `data/elicitation_robustness.npz`, `figures/fig_elicitation_robustness.{pdf,png}` |
+| `elicit.robustness` | How do all formats and rules, including the Themis coverage × price objective, compare under homogeneous and heterogeneous peak locations? | deterministic scenario sweep | 4 peak scenarios; 7 rules; unweighted, emissions-weighted, and maximum regret; seed 42 | true quadratic surplus | `data/elicitation_robustness.npz`, `figures/fig_elicitation_robustness.{pdf,png}`, `reference_outputs/elicitation_rule_comparison.md` |
 
 ## Modelling assumption
 
@@ -23,8 +23,8 @@ experiment uses a three-point scenario sweep.
 - **Full:** peak, upper zero, and scale. Reported scale is normalised to one
   before welfare maximisation; the raw-scale validation reproduces utility
   hiking.
-- **Peak:** one preferred price, aggregated by the fixed weighted quantile; the
-  common scenario shape implies membership from that scalar report.
+- **Peak:** one preferred price, aggregated by a fixed weighted quantile;
+  membership is inferred using the population-average peak fraction.
 - **Region:** a closed acceptable interval, evaluated under both the weighted
   midpoint of the greatest-emissions intersection and a maximum-participating-
   emissions rule.

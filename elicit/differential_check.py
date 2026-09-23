@@ -9,6 +9,7 @@ from elicit.rules import (
     peak_quantile,
     region_intersection_midpoint,
     region_max_coverage,
+    region_themis_objective,
 )
 from elicit.utilities import load_model
 from paths import ELICIT_DIFFERENTIAL
@@ -104,6 +105,21 @@ def independent_region_coverage(reports, weights):
     return float(price), members
 
 
+def independent_region_themis(reports, weights):
+    def covered(price):
+        return float(sum(
+            weights[i] for i, r in enumerate(reports)
+            if r.lower - 1e-12 <= price <= r.upper + 1e-12
+        ))
+
+    candidates = [value for r in reports for value in (r.lower, r.upper)]
+    price = max(candidates, key=lambda p: (covered(p) * p, covered(p), -p))
+    members = np.array([
+        r.lower - 1e-12 <= price <= r.upper + 1e-12 for r in reports
+    ])
+    return float(price), members
+
+
 def independent_welfare(model, price, members):
     peaks = np.asarray(model.peak_fractions) * model.thresholds
     widths = model.thresholds - peaks
@@ -137,7 +153,8 @@ def main() -> None:
     rng = np.random.default_rng(SEED)
     stats = {
         name: {"price": 0.0, "welfare": 0.0, "member_mismatches": 0}
-        for name in ("full", "peak", "region midpoint", "region max coverage")
+        for name in ("full", "peak", "peak median", "region midpoint",
+                     "region max coverage", "region c×p")
     }
     count = 0
     for full, peaks, regions in random_profiles(model, rng):
@@ -149,12 +166,20 @@ def main() -> None:
              ), independent_peak(
                 peaks, model.weights, model.coverage, model.peak_fractions
              )),
+            ("peak median", peak_quantile(
+                peaks, model.weights, 0.5, model.peak_fractions
+             ), independent_peak(
+                peaks, model.weights, 0.5, model.peak_fractions
+             )),
             ("region midpoint", region_intersection_midpoint(
                 regions, model.weights
              ), independent_region_midpoint(regions, model.weights)),
             ("region max coverage", region_max_coverage(
                 regions, model.weights
              ), independent_region_coverage(regions, model.weights)),
+            ("region c×p", region_themis_objective(
+                regions, model.weights
+             ), independent_region_themis(regions, model.weights)),
         )
         for name, primary, independent in comparisons:
             price, members = independent

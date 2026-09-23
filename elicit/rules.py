@@ -167,6 +167,31 @@ def region_max_coverage(
     return Outcome(float(price), members, float(weights[members].sum()))
 
 
+def region_themis_objective(
+    reports: Sequence[RegionReport],
+    weights: np.ndarray,
+) -> Outcome:
+    """Maximise participating emissions times price, as ``engine.themis`` does.
+
+    Coverage is piecewise constant in price, so the product is maximised at an
+    interval endpoint. Ties prefer higher coverage, then the lower price.
+    """
+    weights = np.asarray(weights, float)
+    candidates = {
+        value for report in reports for value in (report.lower, report.upper)
+    }
+
+    def coverage(price: float) -> float:
+        members = np.array([r.accepts(price) for r in reports])
+        return float(weights[members].sum())
+
+    price = max(candidates, key=lambda p: (coverage(p) * p, coverage(p), -p))
+    members = np.array([r.accepts(price) for r in reports])
+    return Outcome(
+        float(price), members, float(weights[members].sum()) * float(price)
+    )
+
+
 def region_weighted_median_midpoints(
     reports: Sequence[RegionReport],
     weights: np.ndarray,
