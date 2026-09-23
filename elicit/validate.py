@@ -1,4 +1,4 @@
-"""Pre-headline verification anchors for the elicitation experiment."""
+"""Checks for the elicitation model and report rules."""
 from __future__ import annotations
 
 from dataclasses import replace

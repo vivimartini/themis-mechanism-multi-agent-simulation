@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+from elicit.formats import FullReport, PeakReport, RegionReport
 from elicit.manifest import write_manifest
 from elicit.measures import SPECS, evaluate_spec
 from elicit.utilities import DEFAULT_PEAK_FRACTIONS, load_model
@@ -28,6 +29,13 @@ def run_nine_actor(budget: int, global_draws: int):
     actor_regrets = np.zeros((
         len(DEFAULT_PEAK_FRACTIONS), len(SPECS), 9
     ))
+    best_report = np.full((len(DEFAULT_PEAK_FRACTIONS), len(SPECS), 9, 3), np.nan)
+    truthful_utility = np.zeros_like(actor_regrets)
+    best_utility = np.zeros_like(actor_regrets)
+    best_price = np.zeros_like(actor_regrets)
+    best_members = np.zeros((
+        len(DEFAULT_PEAK_FRACTIONS), len(SPECS), 9, 9
+    ), dtype=bool)
 
     rows = []
     for s, fraction in enumerate(DEFAULT_PEAK_FRACTIONS):
@@ -42,6 +50,22 @@ def run_nine_actor(budget: int, global_draws: int):
             regrets[s, k] = values.sum()
             prices[s, k] = outcome.price
             actor_regrets[s, k] = values
+            for i, response in enumerate(responses):
+                report = response.best_report
+                if isinstance(report, FullReport):
+                    best_report[s, k, i] = (
+                        report.peak, report.upper, report.scale
+                    )
+                elif isinstance(report, PeakReport):
+                    best_report[s, k, i, 0] = report.peak
+                elif isinstance(report, RegionReport):
+                    best_report[s, k, i, :2] = (
+                        report.lower, report.upper
+                    )
+                truthful_utility[s, k, i] = response.truthful_utility
+                best_utility[s, k, i] = response.best_utility
+                best_price[s, k, i] = response.best_outcome.price
+                best_members[s, k, i] = response.best_outcome.members
             rows.append({
                 "peak fraction": fraction,
                 "format / rule": spec.label,
@@ -50,7 +74,14 @@ def run_nine_actor(budget: int, global_draws: int):
                 "welfare loss": loss,
                 "total found regret": values.sum(),
             })
-    return losses, regrets, prices, actor_regrets, pd.DataFrame(rows)
+    details = {
+        "best_report": best_report,
+        "truthful_utility": truthful_utility,
+        "best_utility": best_utility,
+        "best_price": best_price,
+        "best_members": best_members,
+    }
+    return losses, regrets, prices, actor_regrets, details, pd.DataFrame(rows)
 
 
 def run_four_actor():
@@ -161,11 +192,11 @@ def main(argv=None) -> None:
     )
     args = parser.parse_args(argv)
 
-    print("=== verification anchors (must pass before headline output) ===")
+    print("=== model checks ===")
     validate()
 
     print("\n=== Phase A: calibrated nine-actor price-only game ===")
-    losses, regrets, prices, per_actor, nine_table = run_nine_actor(
+    losses, regrets, prices, per_actor, details, nine_table = run_nine_actor(
         args.budget, args.global_draws
     )
     print(nine_table.round(4).to_string(index=False))
@@ -197,6 +228,11 @@ def main(argv=None) -> None:
         total_regret=regrets,
         truthful_price=prices,
         actor_regret=per_actor,
+        best_report=details["best_report"],
+        truthful_utility=details["truthful_utility"],
+        best_utility=details["best_utility"],
+        best_response_price=details["best_price"],
+        best_response_members=details["best_members"],
         four_actor_names=np.array(FOUR_ACTORS, dtype="U24"),
         four_actor_regret=four_regrets,
         four_actor_price=four_prices,
@@ -213,6 +249,8 @@ def main(argv=None) -> None:
     )
     draw(losses, regrets)
     write_manifest()
+    from elicit.hand_check import write_hand_check
+    write_hand_check()
     print(f"\nwrote {ELICIT_NPZ}")
     print(f"wrote {ELICIT_FIGURE_PDF} and {ELICIT_FIGURE_PNG}")
 

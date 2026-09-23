@@ -1,0 +1,169 @@
+{
+  "actors": [
+    "CHINA",
+    "INDIA",
+    "INDONESIA"
+  ],
+  "price_grid": [
+    0.0,
+    10.0,
+    20.0,
+    30.0
+  ],
+  "peak_fraction": 0.5,
+  "interpretation": "Maximum truth-telling regret over every finite report profile of the other two actors; no optimiser is used.",
+  "formats": {
+    "full: welfare": {
+      "actions_per_actor": [
+        7,
+        7,
+        7
+      ],
+      "joint_profiles": 343,
+      "max_truth_regret_by_actor": [
+        0.07811619971205686,
+        0.09526222955072972,
+        0.051896395475141355
+      ],
+      "max_truth_regret": 0.09526222955072972,
+      "sum_max_truth_regret": 0.22527482473792793,
+      "witness": [
+        {
+          "others": [
+            0,
+            0
+          ],
+          "report": "FullReport(peak=20.0, upper=30.0, scale=1.0)",
+          "truthful_price": 11.16598951678864,
+          "deviated_price": 20.0
+        },
+        {
+          "others": [
+            6,
+            2
+          ],
+          "report": "FullReport(peak=10.0, upper=20.0, scale=1.0)",
+          "truthful_price": 19.57314370289326,
+          "deviated_price": 17.461375429492914
+        },
+        {
+          "others": [
+            5,
+            5
+          ],
+          "report": "FullReport(peak=0.0, upper=10.0, scale=1.0)",
+          "truthful_price": 8.343425869704433,
+          "deviated_price": 7.869937233064303
+        }
+      ]
+    },
+    "peak: quantile": {
+      "actions_per_actor": [
+        5,
+        5,
+        5
+      ],
+      "joint_profiles": 125,
+      "max_truth_regret_by_actor": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_truth_regret": 0.0,
+      "sum_max_truth_regret": 0.0,
+      "witness": [
+        null,
+        null,
+        null
+      ]
+    },
+    "region: intersection-midpoint": {
+      "actions_per_actor": [
+        11,
+        11,
+        11
+      ],
+      "joint_profiles": 1331,
+      "max_truth_regret_by_actor": [
+        0.9983458203580884,
+        0.9862114634130749,
+        0.5844908656827926
+      ],
+      "max_truth_regret": 0.9983458203580884,
+      "sum_max_truth_regret": 2.569048149453956,
+      "witness": [
+        {
+          "others": [
+            0,
+            1
+          ],
+          "report": "RegionReport(lower=10.0, upper=30.0)",
+          "truthful_price": 0.0,
+          "deviated_price": 17.52102288528983
+        },
+        {
+          "others": [
+            0,
+            1
+          ],
+          "report": "RegionReport(lower=10.0, upper=10.0)",
+          "truthful_price": 0.0,
+          "deviated_price": 10.0
+        },
+        {
+          "others": [
+            0,
+            0
+          ],
+          "report": "RegionReport(lower=0.0, upper=10.0)",
+          "truthful_price": 12.161011943491156,
+          "deviated_price": 10.0
+        }
+      ]
+    },
+    "region: max-coverage": {
+      "actions_per_actor": [
+        11,
+        11,
+        11
+      ],
+      "joint_profiles": 1331,
+      "max_truth_regret_by_actor": [
+        0.9960208922972685,
+        0.9862114634130749,
+        0.5844908656827926
+      ],
+      "max_truth_regret": 0.9960208922972685,
+      "sum_max_truth_regret": 2.566723221393136,
+      "witness": [
+        {
+          "others": [
+            0,
+            1
+          ],
+          "report": "RegionReport(lower=10.0, upper=20.0)",
+          "truthful_price": 0.0,
+          "deviated_price": 17.898299363989892
+        },
+        {
+          "others": [
+            0,
+            1
+          ],
+          "report": "RegionReport(lower=10.0, upper=10.0)",
+          "truthful_price": 0.0,
+          "deviated_price": 10.0
+        },
+        {
+          "others": [
+            0,
+            0
+          ],
+          "report": "RegionReport(lower=0.0, upper=10.0)",
+          "truthful_price": 12.161011943491156,
+          "deviated_price": 10.0
+        }
+      ]
+    }
+  }
+}

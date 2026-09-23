@@ -6,13 +6,17 @@ and does not alter any submitted result.
 | module | question | sampling | seed / search | utility | outputs |
 |---|---|---|---|---|---|
 | `elicit.run_experiment` | How does limiting the report format trade truthful welfare against strategic regret? | deterministic scenario sweep | peak fractions 0.35, 0.50, 0.65; format-specific global search, seed 42 | normalised quadratic true surplus; zero outside option | `data/elicitation_tradeoff.npz`, `figures/fig_elicitation_tradeoff.{pdf,png}` |
+| `elicit.hand_check` | Can the largest central-scenario midpoint deviation be reproduced directly? | deterministic arithmetic check | central scenario, midpoint rule | true quadratic surplus | `reference_outputs/elicitation_hand_check.md` |
+| `elicit.enumerate_small` | Does the format ordering survive every profile in a finite three-actor game? | exhaustive | 4-point price grid plus truthful report; no optimiser | true quadratic surplus | `data/elicitation_joint_enumeration.json` |
+| `elicit.differential_check` | Do independent implementations of all rules and scoring agree? | seeded random profiles | 500 profiles, seed 20260923 | true quadratic surplus | `reference_outputs/elicitation_differential_check.md` |
+| `elicit.robustness` | Does region manipulation survive a weighted-median rule and heterogeneous peak locations? | deterministic scenario sweep | 4 peak scenarios; 3 region rules; seed 42 | true quadratic surplus | `data/elicitation_robustness.npz`, `figures/fig_elicitation_robustness.{pdf,png}` |
 
 ## Modelling assumption
 
 At fixed coverage and with transfers off, the existing affine willingness is the
 upper zero of a quadratic surplus. `peak_fraction` places the interior peak as a
-fraction of that upper zero. No data identify this quantity, so all headline
-outputs show the three-point scenario sweep.
+fraction of that upper zero. No data identify this quantity, so the main
+experiment uses a three-point scenario sweep.
 
 ## Report formats
 
@@ -28,7 +32,7 @@ outputs show the three-point scenario sweep.
 Membership follows the report; realised utility uses the true quadratic surplus;
 non-members receive the zero outside option.
 
-Reported regrets are lower bounds found by a deliberately redundant search.
+Reported regrets are lower bounds from several complementary search methods.
 Membership makes the objective discontinuous, so the runner does not present
 CMA convergence as an equilibrium or exact-regret certificate. Phase B is exact
 only on its declared report grid `[0, 42]` in two-unit steps. Phase A uses:

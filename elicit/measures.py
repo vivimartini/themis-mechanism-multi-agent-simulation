@@ -20,12 +20,16 @@ from elicit.rules import (
     peak_quantile,
     region_intersection_midpoint,
     region_max_coverage,
+    region_weighted_median_midpoints,
 )
 from elicit.utilities import QuadraticSurplusModel
 from rq2.oracle import cma_minimize, DEFAULT_SEED
 
 FormatName = Literal["full", "peak", "region"]
-RuleName = Literal["welfare", "quantile", "intersection-midpoint", "max-coverage"]
+RuleName = Literal[
+    "welfare", "quantile", "intersection-midpoint", "max-coverage",
+    "weighted-median",
+]
 
 
 @dataclass(frozen=True)
@@ -53,6 +57,13 @@ SPECS = (
     ExperimentSpec("region", "intersection-midpoint"),
     ExperimentSpec("region", "max-coverage"),
 )
+RULE_SEED_OFFSET = {
+    "welfare": 0,
+    "quantile": 1000,
+    "intersection-midpoint": 2000,
+    "max-coverage": 3000,
+    "weighted-median": 4000,
+}
 
 
 def truthful_reports(model: QuadraticSurplusModel, spec: ExperimentSpec) -> list:
@@ -82,6 +93,8 @@ def select(
         return region_intersection_midpoint(reports, model.weights)
     if spec == ExperimentSpec("region", "max-coverage"):
         return region_max_coverage(reports, model.weights)
+    if spec == ExperimentSpec("region", "weighted-median"):
+        return region_weighted_median_midpoints(reports, model.weights)
     raise ValueError(f"unsupported format/rule combination: {spec}")
 
 
@@ -202,7 +215,9 @@ def best_response(
                 evaluate(RegionReport(float(lower), float(upper)))
 
         if global_draws and not narrowing_only:
-            rng = np.random.default_rng(seed + 1000 * SPECS.index(spec) + actor)
+            rng = np.random.default_rng(
+                seed + RULE_SEED_OFFSET[spec.rule] + actor
+            )
             draws = np.sort(
                 rng.uniform(0.0, price_limit, size=(global_draws, 2)), axis=1
             )
@@ -231,7 +246,9 @@ def best_response(
                     evaluate(FullReport(float(peak), float(upper), scale))
 
         if global_draws:
-            rng = np.random.default_rng(seed + 1000 * SPECS.index(spec) + actor)
+            rng = np.random.default_rng(
+                seed + RULE_SEED_OFFSET[spec.rule] + actor
+            )
             draws = np.sort(
                 rng.uniform(0.0, price_limit, size=(global_draws, 2)), axis=1
             )

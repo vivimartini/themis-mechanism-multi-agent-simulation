@@ -39,15 +39,18 @@ class QuadraticSurplusModel:
     alpha_base: np.ndarray
     alpha_cov: np.ndarray
     coverage: float
-    peak_fraction: float
+    peak_fraction: float | np.ndarray
 
     def __post_init__(self) -> None:
         n = len(self.names)
         arrays = (self.weights, self.alpha_base, self.alpha_cov)
         if any(np.asarray(a).shape != (n,) for a in arrays):
             raise ValueError("actor arrays must be one-dimensional and equally sized")
-        if not 0.0 < self.peak_fraction < 1.0:
-            raise ValueError("peak_fraction must lie strictly between zero and one")
+        fractions = np.asarray(self.peak_fraction, dtype=float)
+        if fractions.ndim > 1 or (fractions.ndim == 1 and fractions.shape != (n,)):
+            raise ValueError("peak_fraction must be scalar or one value per actor")
+        if np.any((fractions <= 0.0) | (fractions >= 1.0)):
+            raise ValueError("peak fractions must lie strictly between zero and one")
         if not 0.0 <= self.coverage <= 1.0:
             raise ValueError("coverage must lie in [0, 1]")
         if np.any(self.thresholds <= 0):
@@ -62,7 +65,14 @@ class QuadraticSurplusModel:
 
     @property
     def peaks(self) -> np.ndarray:
-        return self.peak_fraction * self.thresholds
+        return self.peak_fractions * self.thresholds
+
+    @property
+    def peak_fractions(self) -> np.ndarray:
+        fractions = np.asarray(self.peak_fraction, dtype=float)
+        if fractions.ndim == 0:
+            return np.full(len(self.names), float(fractions))
+        return fractions
 
     @property
     def half_widths(self) -> np.ndarray:
@@ -97,13 +107,13 @@ class QuadraticSurplusModel:
             alpha_base=self.alpha_base[idx].copy(),
             alpha_cov=self.alpha_cov[idx].copy(),
             coverage=self.coverage,
-            peak_fraction=self.peak_fraction,
+            peak_fraction=self.peak_fractions[idx].copy(),
         )
 
 
 def load_model(
     coverage: float = DEFAULT_COVERAGE,
-    peak_fraction: float = 0.50,
+    peak_fraction: float | Iterable[float] = 0.50,
     actors_csv: str | Path = ACTORS_CSV,
 ) -> QuadraticSurplusModel:
     """Build the transfer-free surplus model from the dissertation calibration."""
@@ -116,6 +126,10 @@ def load_model(
         alpha_base=frame["alpha_base"].to_numpy(float),
         alpha_cov=frame["alpha_cov"].to_numpy(float),
         coverage=float(coverage),
-        peak_fraction=float(peak_fraction),
+        peak_fraction=(
+            float(peak_fraction)
+            if np.asarray(peak_fraction).ndim == 0
+            else np.asarray(tuple(peak_fraction), dtype=float)
+        ),
     )
 

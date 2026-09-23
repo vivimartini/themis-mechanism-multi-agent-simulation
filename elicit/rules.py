@@ -71,7 +71,7 @@ def peak_quantile(
     reports: Sequence[PeakReport],
     weights: np.ndarray,
     target_coverage: float,
-    peak_fraction: float,
+    peak_fraction: float | np.ndarray,
     *,
     fixed_membership: bool = False,
 ) -> Outcome:
@@ -165,4 +165,20 @@ def region_max_coverage(
     price = max(candidates, key=lambda p: (coverage(p), p))
     members = np.array([r.accepts(price) for r in reports])
     return Outcome(float(price), members, float(weights[members].sum()))
+
+
+def region_weighted_median_midpoints(
+    reports: Sequence[RegionReport],
+    weights: np.ndarray,
+) -> Outcome:
+    """Select the emission-weighted median of reported interval midpoints."""
+    weights = np.asarray(weights, float)
+    midpoints = np.array([report.midpoint for report in reports])
+    order = np.argsort(midpoints, kind="stable")
+    pivot = int(np.searchsorted(
+        np.cumsum(weights[order]), 0.5 * weights.sum() - 1e-12
+    ))
+    price = float(midpoints[order[pivot]])
+    members = np.array([report.accepts(price) for report in reports])
+    return Outcome(price, members, float(weights[members].sum()))
 
