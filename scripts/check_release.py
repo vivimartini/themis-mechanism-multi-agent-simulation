@@ -94,6 +94,7 @@ TEXT_FILES = (
     *sorted((ROOT / "engine").glob("*.py")),
     *sorted((ROOT / "archetypes").glob("*.py")),
     *sorted((ROOT / "rq2").glob("*.py")),
+    *sorted((ROOT / "elicit").glob("*.py")),
     *sorted((ROOT / "scripts").glob("*.py")),
     *sorted(ROOT.glob("*.sh")),
     *sorted((ROOT / "scripts").glob("*.sh")),

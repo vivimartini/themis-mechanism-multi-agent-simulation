@@ -73,6 +73,7 @@ pipeline, and it expects the versioned derived artifacts to be present. Run
 engine/          Reference mechanism, scenario prior, and transfer analysis
 archetypes/      Published-archetype accounting and digitised preference check
 rq2/             Empirical-game experiments, robustness checks, and figures
+elicit/          Post-dissertation report-format experiment (separate runner)
 data/            Input calibration plus experiment-generated numeric results
 figures/         Experiment-generated dissertation figures
 reference_outputs/
@@ -94,6 +95,17 @@ limitations of calibration inputs.
 ## Outputs
 
 Regenerate derived data and figures after changing their producing module.
+
+## Post-dissertation extension
+
+[`elicit/`](elicit/) compares full-utility, preferred-price, and
+acceptable-region reports in a separate price-only experiment. It does not run
+under `run_all.sh` and does not alter the submitted dissertation results. See
+[`elicit/README.md`](elicit/README.md) and run:
+
+```bash
+.venv/bin/python -m elicit.run_experiment
+```
 
 ## Citation
 

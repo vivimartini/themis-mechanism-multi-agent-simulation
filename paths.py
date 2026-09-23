@@ -26,3 +26,10 @@ ALPHARANK_ABLATION_NPZ = DATA / "alpharank_leave_one_out.npz"
 # Point-calibration headlines (regret geography, guardrails, obstruction,
 # optimizer comparison) emitted by rq2.collect_headlines.
 HEADLINES_JSON = DATA / "headlines.json"
+
+# Post-dissertation report-format experiment. This is intentionally outside
+# run_all.sh so the submitted evidence pipeline remains unchanged.
+ELICIT_NPZ = DATA / "elicitation_tradeoff.npz"
+ELICIT_FIGURE_PDF = FIGURES / "fig_elicitation_tradeoff.pdf"
+ELICIT_FIGURE_PNG = FIGURES / "fig_elicitation_tradeoff.png"
+ELICIT_MANIFEST = REFERENCE / "elicitation_experiment_manifest.md"
